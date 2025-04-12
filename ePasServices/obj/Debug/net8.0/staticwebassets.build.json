@@ -1,0 +1,12 @@
+{
+  "Version": 1,
+  "Hash": "JmC4dAllnpZonscSQ3YOBesmYmlMoAc8trtoTAy0NPU=",
+  "Source": "ePasServices",
+  "BasePath": "_content/ePasServices",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": [],
+  "Endpoints": []
+}

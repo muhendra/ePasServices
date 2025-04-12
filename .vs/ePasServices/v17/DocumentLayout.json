@@ -1,0 +1,122 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\pertamina\\ePasServices\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{6D9C2313-876C-40F0-ADC5-28560E50CA8D}|ePasServices\\ePasServices.csproj|d:\\pertamina\\epasservices\\epasservices\\appsettings.development.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{6D9C2313-876C-40F0-ADC5-28560E50CA8D}|ePasServices\\ePasServices.csproj|solutionrelative:epasservices\\appsettings.development.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6D9C2313-876C-40F0-ADC5-28560E50CA8D}|ePasServices\\ePasServices.csproj|d:\\pertamina\\epasservices\\epasservices\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{6D9C2313-876C-40F0-ADC5-28560E50CA8D}|ePasServices\\ePasServices.csproj|solutionrelative:epasservices\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6D9C2313-876C-40F0-ADC5-28560E50CA8D}|ePasServices\\ePasServices.csproj|d:\\pertamina\\epasservices\\epasservices\\epasservices.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{6D9C2313-876C-40F0-ADC5-28560E50CA8D}|ePasServices\\ePasServices.csproj|solutionrelative:epasservices\\epasservices.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6D9C2313-876C-40F0-ADC5-28560E50CA8D}|ePasServices\\ePasServices.csproj|d:\\pertamina\\epasservices\\epasservices\\controllers\\weatherforecastcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6D9C2313-876C-40F0-ADC5-28560E50CA8D}|ePasServices\\ePasServices.csproj|solutionrelative:epasservices\\controllers\\weatherforecastcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6D9C2313-876C-40F0-ADC5-28560E50CA8D}|ePasServices\\ePasServices.csproj|d:\\pertamina\\epasservices\\epasservices\\models\\weatherforecast.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6D9C2313-876C-40F0-ADC5-28560E50CA8D}|ePasServices\\ePasServices.csproj|solutionrelative:epasservices\\models\\weatherforecast.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6D9C2313-876C-40F0-ADC5-28560E50CA8D}|ePasServices\\ePasServices.csproj|d:\\pertamina\\epasservices\\epasservices\\controllers\\wilayahcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6D9C2313-876C-40F0-ADC5-28560E50CA8D}|ePasServices\\ePasServices.csproj|solutionrelative:epasservices\\controllers\\wilayahcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 1,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "D:\\pertamina\\ePasServices\\ePasServices\\appsettings.json",
+              "RelativeDocumentMoniker": "ePasServices\\appsettings.json",
+              "ToolTip": "D:\\pertamina\\ePasServices\\ePasServices\\appsettings.json",
+              "RelativeToolTip": "ePasServices\\appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-04-12T07:44:43.496Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "appsettings.Development.json",
+              "DocumentMoniker": "D:\\pertamina\\ePasServices\\ePasServices\\appsettings.Development.json",
+              "RelativeDocumentMoniker": "ePasServices\\appsettings.Development.json",
+              "ToolTip": "D:\\pertamina\\ePasServices\\ePasServices\\appsettings.Development.json",
+              "RelativeToolTip": "ePasServices\\appsettings.Development.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAABNAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-04-12T07:44:38.116Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "ePasServices",
+              "DocumentMoniker": "D:\\pertamina\\ePasServices\\ePasServices\\ePasServices.csproj",
+              "RelativeDocumentMoniker": "ePasServices\\ePasServices.csproj",
+              "ToolTip": "D:\\pertamina\\ePasServices\\ePasServices\\ePasServices.csproj",
+              "RelativeToolTip": "ePasServices\\ePasServices.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2025-04-12T07:40:04.17Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "WeatherForecast.cs",
+              "DocumentMoniker": "D:\\pertamina\\ePasServices\\ePasServices\\Models\\WeatherForecast.cs",
+              "RelativeDocumentMoniker": "ePasServices\\Models\\WeatherForecast.cs",
+              "ToolTip": "D:\\pertamina\\ePasServices\\ePasServices\\Models\\WeatherForecast.cs",
+              "RelativeToolTip": "ePasServices\\Models\\WeatherForecast.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAABFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-12T07:38:22.211Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "WeatherForecastController.cs",
+              "DocumentMoniker": "D:\\pertamina\\ePasServices\\ePasServices\\Controllers\\WeatherForecastController.cs",
+              "RelativeDocumentMoniker": "ePasServices\\Controllers\\WeatherForecastController.cs",
+              "ToolTip": "D:\\pertamina\\ePasServices\\ePasServices\\Controllers\\WeatherForecastController.cs",
+              "RelativeToolTip": "ePasServices\\Controllers\\WeatherForecastController.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAAAsAAAA+AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-12T07:38:24.184Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "WilayahController.cs",
+              "DocumentMoniker": "D:\\pertamina\\ePasServices\\ePasServices\\Controllers\\WilayahController.cs",
+              "RelativeDocumentMoniker": "ePasServices\\Controllers\\WilayahController.cs",
+              "ToolTip": "D:\\pertamina\\ePasServices\\ePasServices\\Controllers\\WilayahController.cs",
+              "RelativeToolTip": "ePasServices\\Controllers\\WilayahController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-12T07:32:28.664Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
