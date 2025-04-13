@@ -5,10 +5,9 @@ using Microsoft.IdentityModel.Tokens;
 
 public static class TokenHelper
 {
-    public static string GenerateAccessToken(string username, string app)
+    public static string GenerateAccessToken(string username, string app, byte[] key)
     {
         var tokenHandler = new JwtSecurityTokenHandler();
-        var key = Encoding.UTF8.GetBytes("your_secret_key_123456"); // <-- Ganti dari config kalau perlu
         var claims = new[]
         {
             new Claim("username", username),
@@ -27,10 +26,9 @@ public static class TokenHelper
         return tokenHandler.WriteToken(token);
     }
 
-    public static string GenerateRefreshToken(string username)
+    public static string GenerateRefreshToken(string username, byte[] key)
     {
         var tokenHandler = new JwtSecurityTokenHandler();
-        var key = Encoding.UTF8.GetBytes("your_secret_key_123456"); // <-- Ganti juga
         var claims = new[]
         {
             new Claim("username", username)
@@ -46,5 +44,14 @@ public static class TokenHelper
         );
 
         return tokenHandler.WriteToken(token);
+    }
+
+    public static Dictionary<string, string>? DecodeToken(string token)
+    {
+        var handler = new JwtSecurityTokenHandler();
+        if (!handler.CanReadToken(token)) return null;
+
+        var jwt = handler.ReadJwtToken(token);
+        return jwt.Claims.ToDictionary(c => c.Type, c => c.Value);
     }
 }

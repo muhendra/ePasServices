@@ -52,13 +52,13 @@ public class LoginController : ControllerBase
             return BadRequest(new ApiResponse("Invalid Request", "Request anda sudah kedaluwarsa"));
 
         var user = await _userService.GetUserByUsernameAsync(request.Username);
-        if (user == null || !BCrypt.Net.BCrypt.Verify(request.Password, user.password_hash))
+        if (user == null || string.IsNullOrEmpty(user.password_hash) || !BCrypt.Net.BCrypt.Verify(request.Password, user.password_hash))
             return BadRequest(new ApiResponse("Invalid Request", "Username atau password yang anda masukan salah"));
 
-        var accessToken = TokenHelper.GenerateAccessToken(user.username, user.App);
-        var refreshToken = TokenHelper.GenerateRefreshToken(user.username);
+        var jwtKey = Encoding.UTF8.GetBytes(_config["Jwt:Key"]);
+        var accessToken = TokenHelper.GenerateAccessToken(user.username, user.App, jwtKey);
+        var refreshToken = TokenHelper.GenerateRefreshToken(user.username, jwtKey);
 
-        // Simpan suffix refresh token ke DB (25 char terakhir)
         var suffixRefresh = refreshToken[^25..];
         await _userService.UpdateSuffixRefreshToken(user.username, suffixRefresh);
 

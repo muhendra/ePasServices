@@ -49,4 +49,19 @@ public class AppUserService : IAppUserService
         await _conn.ExecuteAsync(sql, new { username });
     }
 
+    public async Task<SuffixRefreshTokenInfo?> GetSuffixRefreshTokenInfoAsync(string username)
+    {
+        var sql = @"
+        SELECT 
+            COALESCE(au.suffix_refresh_token, '') AS SuffixRefreshToken,
+            ar.app AS App
+        FROM app_user au
+        INNER JOIN app_user_role aur ON aur.app_user_id = au.id
+        INNER JOIN app_role ar ON ar.id = aur.app_role_id
+        WHERE au.username = @username AND au.status = 'ACTIVE' AND ar.app IN ('Auditor','SPBU')";
+
+        return await _conn.QueryFirstOrDefaultAsync<SuffixRefreshTokenInfo>(sql, new { username });
+    }
+
+
 }
