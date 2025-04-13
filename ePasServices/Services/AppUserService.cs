@@ -63,5 +63,22 @@ public class AppUserService : IAppUserService
         return await _conn.QueryFirstOrDefaultAsync<SuffixRefreshTokenInfo>(sql, new { username });
     }
 
+    public async Task<ProfileViewModel?> GetUserProfileAsync(string username)
+    {
+        var sql = @"
+        SELECT 
+            au.username,
+            au.name,
+            au.email,
+            au.phone_number AS PhoneNumber,
+            ar.app AS App
+        FROM app_user au
+        INNER JOIN app_user_role aur ON aur.app_user_id = au.id
+        INNER JOIN app_role ar ON ar.id = aur.app_role_id
+        WHERE au.username = @username AND au.status = 'ACTIVE'
+        LIMIT 1";
+
+        return await _conn.QueryFirstOrDefaultAsync<ProfileViewModel>(sql, new { username });
+    }
 
 }

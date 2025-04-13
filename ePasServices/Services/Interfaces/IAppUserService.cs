@@ -7,4 +7,6 @@ public interface IAppUserService
     Task UpdateSuffixRefreshToken(string username, string suffix);
     Task ClearRefreshTokenAsync(string username);
     Task<SuffixRefreshTokenInfo?> GetSuffixRefreshTokenInfoAsync(string username);
+    Task<ProfileViewModel?> GetUserProfileAsync(string username);
+
 }

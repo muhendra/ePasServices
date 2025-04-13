@@ -20,7 +20,7 @@ builder.Services.AddDbContext<PostgreDbContext>(options =>
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
-        var key = Encoding.UTF8.GetBytes("your_secret_key_123456");
+        var key = Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]);
         options.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuer = false,
