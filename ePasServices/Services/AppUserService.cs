@@ -81,4 +81,74 @@ public class AppUserService : IAppUserService
         return await _conn.QueryFirstOrDefaultAsync<ProfileViewModel>(sql, new { username });
     }
 
+    public async Task<ProfileWithSpbuViewModel?> GetUserProfileWithSpbuAsync(string username)
+    {
+        var sql = @"
+        SELECT 
+            au.name AS Name,
+            ar.app AS App,
+            s.code AS Code,
+            s.name AS SpbuName,
+            'Good' AS Level
+        FROM app_user au
+        INNER JOIN app_user_role aur ON aur.app_user_id = au.id
+        INNER JOIN app_role ar ON ar.id = aur.app_role_id
+        LEFT JOIN spbu s ON s.id = aur.spbu_id
+        WHERE au.username = @username AND au.status = 'ACTIVE'
+        LIMIT 1";
+
+        var result = await _conn.QueryFirstOrDefaultAsync<ProfileWithSpbuTempDto>(sql, new { username });
+
+        if (result == null) return null;
+
+        return new ProfileWithSpbuViewModel
+        {
+            Name = result.Name,
+            Spbu = result.App == "SPBU"
+                ? new SpbuInfo
+                {
+                    Code = result.Code,
+                    Name = result.SpbuName,
+                    Level = result.Level
+                }
+                : null
+        };
+    }
+
+    public async Task<bool> ChangePasswordAsync(string username, ChangePasswordRequest request)
+    {
+        var sqlGet = "SELECT password_hash FROM app_user WHERE username = @username AND status = 'ACTIVE'";
+        var currentHash = await _conn.QueryFirstOrDefaultAsync<string>(sqlGet, new { username });
+
+        if (string.IsNullOrEmpty(currentHash) || !BCrypt.Net.BCrypt.Verify(request.OldPassword, currentHash))
+            return false;
+
+        var newHash = BCrypt.Net.BCrypt.HashPassword(request.NewPassword);
+
+        var sqlUpdate = @"
+        UPDATE app_user
+        SET password_hash = @newHash,
+            last_change_passwd_dt = CURRENT_TIMESTAMP,
+            updated_by = @username,
+            updated_date = CURRENT_TIMESTAMP
+        WHERE username = @username";
+
+        var affected = await _conn.ExecuteAsync(sqlUpdate, new { newHash, username });
+
+        return affected > 0;
+    }
+
+    public async Task<bool> UpdateNotificationTokenAsync(string username, string token)
+    {
+        var sql = @"
+        UPDATE app_user
+        SET notification_token = @token,
+            updated_by = @username,
+            updated_date = CURRENT_TIMESTAMP
+        WHERE username = @username";
+
+        var affected = await _conn.ExecuteAsync(sql, new { token, username });
+        return affected > 0;
+    }
+
 }

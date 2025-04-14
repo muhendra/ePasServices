@@ -24,7 +24,7 @@ public class ProfileController : ControllerBase
             return Unauthorized(new ApiResponse("Unauthorized", "Token invalid"));
         }
 
-        var profile = await _userService.GetUserProfileAsync(username);
+        var profile = await _userService.GetUserProfileWithSpbuAsync(username);
         if (profile == null)
         {
             return NotFound(new ApiResponse("Not Found", "Data tidak ditemukan"));

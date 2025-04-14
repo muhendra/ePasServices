@@ -17,8 +17,6 @@ public partial class Spbu
 
     public double? Longitude { get; set; }
 
-    public string? AreaCode { get; set; }
-
     public string? Address { get; set; }
 
     public string Status { get; set; } = null!;
@@ -31,9 +29,9 @@ public partial class Spbu
 
     public DateTime? UpdatedDate { get; set; }
 
-    public virtual ICollection<Audit> Audits { get; set; } = new List<Audit>();
+    public virtual ICollection<AppUserRole> AppUserRoles { get; set; } = new List<AppUserRole>();
 
-    public virtual ICollection<SpbuEmail> SpbuEmails { get; set; } = new List<SpbuEmail>();
+    public virtual ICollection<AuditTransaction> AuditTransactions { get; set; } = new List<AuditTransaction>();
 
     public virtual ICollection<SpbuImage> SpbuImages { get; set; } = new List<SpbuImage>();
 }

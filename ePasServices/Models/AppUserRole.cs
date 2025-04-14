@@ -11,7 +11,11 @@ public partial class AppUserRole
 
     public string AppRoleId { get; set; } = null!;
 
+    public string? SpbuId { get; set; }
+
     public virtual AppRole AppRole { get; set; } = null!;
 
     public virtual AppUser AppUser { get; set; } = null!;
+
+    public virtual Spbu? Spbu { get; set; }
 }

@@ -8,5 +8,8 @@ public interface IAppUserService
     Task ClearRefreshTokenAsync(string username);
     Task<SuffixRefreshTokenInfo?> GetSuffixRefreshTokenInfoAsync(string username);
     Task<ProfileViewModel?> GetUserProfileAsync(string username);
+    Task<ProfileWithSpbuViewModel?> GetUserProfileWithSpbuAsync(string username);
+    Task<bool> ChangePasswordAsync(string username, ChangePasswordRequest request);
+    Task<bool> UpdateNotificationTokenAsync(string username, string token);
 
 }

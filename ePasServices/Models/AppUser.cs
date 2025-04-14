@@ -37,9 +37,5 @@ public partial class AppUser
 
     public virtual ICollection<AppUserRole> AppUserRoles { get; set; } = new List<AppUserRole>();
 
-    public virtual ICollection<Audit> Audits { get; set; } = new List<Audit>();
-
-    public virtual ICollection<Notification> Notifications { get; set; } = new List<Notification>();
-
-    public virtual ICollection<SpbuEmail> SpbuEmails { get; set; } = new List<SpbuEmail>();
+    public virtual ICollection<AuditTransaction> AuditTransactions { get; set; } = new List<AuditTransaction>();
 }
