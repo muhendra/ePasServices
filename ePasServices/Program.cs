@@ -6,6 +6,8 @@ using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.WebHost.UseUrls("http://127.0.0.1:5000");
+
 // Add services to the container.
 builder.Services.AddScoped<IAppUserService, AppUserService>(); 
 
