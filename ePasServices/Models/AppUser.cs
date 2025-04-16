@@ -37,5 +37,5 @@ public partial class AppUser
 
     public virtual ICollection<AppUserRole> AppUserRoles { get; set; } = new List<AppUserRole>();
 
-    public virtual ICollection<AuditTransaction> AuditTransactions { get; set; } = new List<AuditTransaction>();
+    public virtual ICollection<TrxAudit> TrxAudits { get; set; } = new List<TrxAudit>();
 }

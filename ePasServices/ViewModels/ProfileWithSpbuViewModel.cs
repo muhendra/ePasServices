@@ -8,18 +8,23 @@
 
     public class SpbuInfo
     {
-        public string Code { get; set; }
-        public string Name { get; set; }
-        public string Level { get; set; }
+        public string spbu_no { get; set; }
+        public string province_name { get; set; }
+        public string city_name { get; set; }
+        public string type { get; set; }
+        public string level { get; set; }
+
     }
 
     public class ProfileWithSpbuTempDto
     {
         public string Name { get; set; }
         public string App { get; set; }
-        public string? Code { get; set; }
-        public string? SpbuName { get; set; }
-        public string? Level { get; set; }
+        public string spbu_no { get; set; }
+        public string province_name { get; set; }
+        public string city_name { get; set; }
+        public string type { get; set; }
+        public string level { get; set; }
     }
 
 

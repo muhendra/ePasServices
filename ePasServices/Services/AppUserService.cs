@@ -2,6 +2,7 @@
 using Dapper;
 using Npgsql;
 using ePasServices.ViewModels;
+using ePasServices.Services.Interfaces;
 
 public class AppUserService : IAppUserService
 {
@@ -20,7 +21,7 @@ public class AppUserService : IAppUserService
             INNER JOIN app_user_role aur ON aur.app_user_id = au.id 
             INNER JOIN app_role ar ON ar.id = aur.app_role_id 
             WHERE au.username = @username AND au.status = 'ACTIVE' 
-              AND ar.app IN ('Auditor','SPBU')";
+              --AND ar.app IN ('Auditor','SPBU')";
 
         return await _conn.QueryFirstOrDefaultAsync<AppUserLoginDto>(sql, new { username });
     }
@@ -85,11 +86,13 @@ public class AppUserService : IAppUserService
     {
         var sql = @"
         SELECT 
-            au.name AS Name,
+            au.Name,
             ar.app AS App,
-            s.code AS Code,
-            s.name AS SpbuName,
-            'Good' AS Level
+            s.spbu_no,
+            s.province_name,
+            s.city_name,
+            s.""type"",
+            s.""level"" 
         FROM app_user au
         INNER JOIN app_user_role aur ON aur.app_user_id = au.id
         INNER JOIN app_role ar ON ar.id = aur.app_role_id
@@ -107,9 +110,11 @@ public class AppUserService : IAppUserService
             Spbu = result.App == "SPBU"
                 ? new SpbuInfo
                 {
-                    Code = result.Code,
-                    Name = result.SpbuName,
-                    Level = result.Level
+                    spbu_no = result.spbu_no,
+                    province_name = result.province_name,
+                    city_name = result.city_name,
+                    type = result.type,
+                    level = result.level
                 }
                 : null
         };
@@ -151,4 +156,9 @@ public class AppUserService : IAppUserService
         return affected > 0;
     }
 
+    public async Task<string?> GetAppUserIdByUsernameAsync(string username)
+    {
+        var sql = "SELECT id FROM app_user WHERE username = @username AND status = 'ACTIVE'";
+        return await _conn.QueryFirstOrDefaultAsync<string?>(sql, new { username });
+    }
 }

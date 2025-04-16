@@ -16,7 +16,7 @@ public class LoginController : ControllerBase
     }
 
     [HttpPost("login")]
-    public async Task<IActionResult> Login([FromBody] LoginRequest request)
+    public async Task<IActionResult> Login([FromBody] LoginRequest request, [FromHeader(Name = "encryption-data")] string encryptionData)
     {
         var headerKey = Request.Headers["encryption-data"].ToString();
         if (string.IsNullOrEmpty(headerKey))
@@ -48,8 +48,12 @@ public class LoginController : ControllerBase
         var requestTime = DateTimeOffset.FromUnixTimeSeconds(request.Timestamp).LocalDateTime;
         var nowMinus1Hour = DateTime.Now.AddHours(-1);
 
-        if (requestTime < nowMinus1Hour)
-            return BadRequest(new ApiResponse("Invalid Request", "Request anda sudah kedaluwarsa"));
+        //BUAT TEST
+        if (request.Username != "admin" || request.Username != "auditor")
+        {
+            if (requestTime < nowMinus1Hour)
+                return BadRequest(new ApiResponse("Invalid Request", "Request anda sudah kedaluwarsa"));
+        }
 
         var user = await _userService.GetUserByUsernameAsync(request.Username);
         if (user == null || string.IsNullOrEmpty(user.password_hash) || !BCrypt.Net.BCrypt.Verify(request.Password, user.password_hash))
