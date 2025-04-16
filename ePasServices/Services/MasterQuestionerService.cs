@@ -20,10 +20,10 @@ namespace ePasServices.Services
 
         public async Task<MasterQuestionerResponse> GetMasterQuestionerByUserAsync(string id, string username)
         {
-            var appUser = await _context.AppUsers.FirstOrDefaultAsync(x => x.Username == username && x.Status == "IN_PROGRESS_INPUT");
+            var appUser = await _context.AppUsers.FirstOrDefaultAsync(x => x.Username == username && x.Status == "ACTIVE");
             if (appUser == null) return null;
 
-            var audit = await _context.TrxAudits.FirstOrDefaultAsync(x => x.AppUserId == appUser.Id && x.Status == "IN_PROGRESS_INPUT");
+            var audit = await _context.TrxAudits.FirstOrDefaultAsync(x => x.AppUserId == appUser.Id && x.Status == "ACTIVE");
             if (audit == null || audit.MasterQuestionerId == null) return null;
 
             var versionKey = $"master_questioner_{audit.MasterQuestionerId}";
