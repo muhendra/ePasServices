@@ -49,7 +49,7 @@ public class LoginController : ControllerBase
         var nowMinus1Hour = DateTime.Now.AddHours(-1);
 
         //BUAT TEST
-        if (request.Username != "admin" || request.Username != "auditor")
+        if (request.Username != "auditor")
         {
             if (requestTime < nowMinus1Hour)
                 return BadRequest(new ApiResponse("Invalid Request", "Request anda sudah kedaluwarsa"));

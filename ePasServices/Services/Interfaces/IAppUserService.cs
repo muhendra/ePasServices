@@ -12,4 +12,5 @@ public interface IAppUserService
     Task<bool> ChangePasswordAsync(string username, ChangePasswordRequest request);
     Task<bool> UpdateNotificationTokenAsync(string username, string token);
     Task<string?> GetAppUserIdByUsernameAsync(string username);
+    Task<AppUser?> GetUserByEmailAsync(string email);
 }

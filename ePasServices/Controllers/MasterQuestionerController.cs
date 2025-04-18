@@ -1,4 +1,5 @@
 ﻿using ePasServices.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ePasServices.Controllers
@@ -16,47 +17,65 @@ namespace ePasServices.Controllers
             _appUserService = appUserService;
         }
 
-        [HttpGet("regular")]
-        public async Task<IActionResult> GetRegularQuestioner()
+        [HttpGet("trx-audit/{id}")]
+        [Authorize]
+        public async Task<IActionResult> GetDetailByTrxAuditId(string id)
         {
-            var username = User.FindFirst("username")?.Value;
-            if (string.IsNullOrEmpty(username))
-                return Unauthorized(new ApiResponse("Unauthorized", "Token invalid"));
-
-            var appUserId = await _appUserService.GetAppUserIdByUsernameAsync(username);
-            var result = await _service.GetMasterQuestionerByUserAsync(appUserId, username);
-
+            var result = await _service.GetQuestionerDetailFromTrxAuditAsync(id);
             if (result == null)
-                return NotFound(new { message = "Data not found" });
+            {
+                return NotFound(new ApiResponse("Not Found", "Data tidak ditemukan"));
+            }
 
             return Ok(new
             {
-                time = DateTimeOffset.UtcNow.ToOffset(TimeSpan.FromHours(7)),
+                time = DateTime.Now,
                 message = "Success",
                 data = result
             });
         }
 
-        [HttpGet("mystery")]
-        public async Task<IActionResult> GetMysteryQuestioner()
-        {
-            var username = User.FindFirst("username")?.Value;
-            if (string.IsNullOrEmpty(username))
-                return Unauthorized(new ApiResponse("Unauthorized", "Token invalid"));
+        //[HttpGet("regular")]
+        //public async Task<IActionResult> GetRegularQuestioner()
+        //{
+        //    var username = User.FindFirst("username")?.Value;
+        //    if (string.IsNullOrEmpty(username))
+        //        return Unauthorized(new ApiResponse("Unauthorized", "Token invalid"));
 
-            var appUserId = await _appUserService.GetAppUserIdByUsernameAsync(username);
-            var result = await _service.GetMasterQuestionerMysteryByUserAsync(appUserId, username);
+        //    var appUserId = await _appUserService.GetAppUserIdByUsernameAsync(username);
+        //    var result = await _service.GetMasterQuestionerByUserAsync(appUserId, username);
 
-            if (result == null)
-                return NotFound(new { message = "Data not found" });
+        //    if (result == null)
+        //        return NotFound(new { message = "Data not found" });
 
-            return Ok(new
-            {
-                time = DateTimeOffset.UtcNow.ToOffset(TimeSpan.FromHours(7)),
-                message = "Success",
-                data = result
-            });
-        }
+        //    return Ok(new
+        //    {
+        //        time = DateTimeOffset.UtcNow.ToOffset(TimeSpan.FromHours(7)),
+        //        message = "Success",
+        //        data = result
+        //    });
+        //}
+
+        //[HttpGet("mystery")]
+        //public async Task<IActionResult> GetMysteryQuestioner()
+        //{
+        //    var username = User.FindFirst("username")?.Value;
+        //    if (string.IsNullOrEmpty(username))
+        //        return Unauthorized(new ApiResponse("Unauthorized", "Token invalid"));
+
+        //    var appUserId = await _appUserService.GetAppUserIdByUsernameAsync(username);
+        //    var result = await _service.GetMasterQuestionerMysteryByUserAsync(appUserId, username);
+
+        //    if (result == null)
+        //        return NotFound(new { message = "Data not found" });
+
+        //    return Ok(new
+        //    {
+        //        time = DateTimeOffset.UtcNow.ToOffset(TimeSpan.FromHours(7)),
+        //        message = "Success",
+        //        data = result
+        //    });
+        //}
     }
 
 }

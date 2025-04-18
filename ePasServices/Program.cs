@@ -9,6 +9,7 @@ using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
+//PROD
 builder.WebHost.UseUrls("http://0.0.0.0:5000");
 
 builder.Services.AddMemoryCache();
@@ -16,6 +17,8 @@ builder.Services.AddMemoryCache();
 // Add services to the container.
 builder.Services.AddScoped<IAppUserService, AppUserService>();
 builder.Services.AddScoped<IMasterQuestionerService, MasterQuestionerService>();
+builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddScoped<ITrxAuditService, TrxAuditService>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();

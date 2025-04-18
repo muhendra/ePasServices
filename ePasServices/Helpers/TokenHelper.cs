@@ -54,4 +54,19 @@ public static class TokenHelper
         var jwt = handler.ReadJwtToken(token);
         return jwt.Claims.ToDictionary(c => c.Type, c => c.Value);
     }
+
+    public static string GenerateResetToken(string username, string key)
+    {
+        var tokenHandler = new JwtSecurityTokenHandler();
+        var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key));
+
+        var token = new JwtSecurityToken(
+            claims: new[] { new Claim("username", username), new Claim("purpose", "reset-password") },
+            expires: DateTime.UtcNow.AddMinutes(30),
+            signingCredentials: new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256Signature)
+        );
+
+        return tokenHandler.WriteToken(token);
+    }
+
 }

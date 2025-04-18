@@ -161,4 +161,10 @@ public class AppUserService : IAppUserService
         var sql = "SELECT id FROM app_user WHERE username = @username AND status = 'ACTIVE'";
         return await _conn.QueryFirstOrDefaultAsync<string?>(sql, new { username });
     }
+
+    public async Task<AppUser?> GetUserByEmailAsync(string email)
+    {
+        var sql = "SELECT * FROM app_user WHERE email = @email AND status = 'ACTIVE'";
+        return await _conn.QueryFirstOrDefaultAsync<AppUser>(sql, new { email });
+    }
 }
