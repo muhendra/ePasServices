@@ -11,7 +11,9 @@ public partial class TrxAudit
 
     public string? AppUserId { get; set; }
 
-    public string? MasterQuestionerId { get; set; }
+    public string? MasterQuestionerIntroId { get; set; }
+
+    public string? MasterQuestionerChecklistId { get; set; }
 
     public string AuditLevel { get; set; } = null!;
 
@@ -25,7 +27,9 @@ public partial class TrxAudit
 
     public int? AuditMediaTotal { get; set; }
 
-    public string? AuditMom { get; set; }
+    public string? AuditMomIntro { get; set; }
+
+    public string? AuditMomChecklist { get; set; }
 
     public string Status { get; set; } = null!;
 
@@ -39,7 +43,9 @@ public partial class TrxAudit
 
     public virtual AppUser? AppUser { get; set; }
 
-    public virtual MasterQuestioner? MasterQuestioner { get; set; }
+    public virtual MasterQuestioner? MasterQuestionerChecklist { get; set; }
+
+    public virtual MasterQuestioner? MasterQuestionerIntro { get; set; }
 
     public virtual Spbu Spbu { get; set; } = null!;
 

@@ -9,6 +9,8 @@ public partial class MasterQuestioner
 
     public string Type { get; set; } = null!;
 
+    public string Category { get; set; } = null!;
+
     public int Version { get; set; }
 
     public DateOnly EffectiveStartDate { get; set; }
@@ -27,5 +29,7 @@ public partial class MasterQuestioner
 
     public virtual ICollection<MasterQuestionerDetail> MasterQuestionerDetails { get; set; } = new List<MasterQuestionerDetail>();
 
-    public virtual ICollection<TrxAudit> TrxAudits { get; set; } = new List<TrxAudit>();
+    public virtual ICollection<TrxAudit> TrxAuditMasterQuestionerChecklists { get; set; } = new List<TrxAudit>();
+
+    public virtual ICollection<TrxAudit> TrxAuditMasterQuestionerIntros { get; set; } = new List<TrxAudit>();
 }

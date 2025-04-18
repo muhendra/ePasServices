@@ -227,6 +227,9 @@ public partial class PostgreDbContext : DbContext
                 .HasMaxLength(50)
                 .HasDefaultValueSql("uuid_generate_v4()")
                 .HasColumnName("id");
+            entity.Property(e => e.Category)
+                .HasMaxLength(50)
+                .HasColumnName("category");
             entity.Property(e => e.CreatedBy)
                 .HasMaxLength(50)
                 .HasColumnName("created_by");
@@ -423,7 +426,8 @@ public partial class PostgreDbContext : DbContext
                 .HasColumnName("audit_level");
             entity.Property(e => e.AuditMediaTotal).HasColumnName("audit_media_total");
             entity.Property(e => e.AuditMediaUpload).HasColumnName("audit_media_upload");
-            entity.Property(e => e.AuditMom).HasColumnName("audit_mom");
+            entity.Property(e => e.AuditMomChecklist).HasColumnName("audit_mom_checklist");
+            entity.Property(e => e.AuditMomIntro).HasColumnName("audit_mom_intro");
             entity.Property(e => e.AuditScheduleDate).HasColumnName("audit_schedule_date");
             entity.Property(e => e.AuditType)
                 .HasMaxLength(100)
@@ -435,9 +439,12 @@ public partial class PostgreDbContext : DbContext
                 .HasDefaultValueSql("CURRENT_TIMESTAMP")
                 .HasColumnType("timestamp(3) without time zone")
                 .HasColumnName("created_date");
-            entity.Property(e => e.MasterQuestionerId)
+            entity.Property(e => e.MasterQuestionerChecklistId)
                 .HasMaxLength(50)
-                .HasColumnName("master_questioner_id");
+                .HasColumnName("master_questioner_checklist_id");
+            entity.Property(e => e.MasterQuestionerIntroId)
+                .HasMaxLength(50)
+                .HasColumnName("master_questioner_intro_id");
             entity.Property(e => e.SpbuId)
                 .HasMaxLength(50)
                 .HasColumnName("spbu_id");
@@ -456,9 +463,13 @@ public partial class PostgreDbContext : DbContext
                 .HasForeignKey(d => d.AppUserId)
                 .HasConstraintName("trx_audit_app_user_id_fkey");
 
-            entity.HasOne(d => d.MasterQuestioner).WithMany(p => p.TrxAudits)
-                .HasForeignKey(d => d.MasterQuestionerId)
-                .HasConstraintName("trx_audit_master_questioner_id_fkey");
+            entity.HasOne(d => d.MasterQuestionerChecklist).WithMany(p => p.TrxAuditMasterQuestionerChecklists)
+                .HasForeignKey(d => d.MasterQuestionerChecklistId)
+                .HasConstraintName("trx_audit_master_questioner_checklist_id_id_fkey");
+
+            entity.HasOne(d => d.MasterQuestionerIntro).WithMany(p => p.TrxAuditMasterQuestionerIntros)
+                .HasForeignKey(d => d.MasterQuestionerIntroId)
+                .HasConstraintName("trx_audit_master_questioner_intro_id_fkey");
 
             entity.HasOne(d => d.Spbu).WithMany(p => p.TrxAudits)
                 .HasForeignKey(d => d.SpbuId)
@@ -594,7 +605,7 @@ public partial class PostgreDbContext : DbContext
                 .HasMaxLength(255)
                 .HasColumnName("du_serial_no");
             entity.Property(e => e.Mode)
-                .HasMaxLength(100)
+                .HasMaxLength(50)
                 .HasColumnName("mode");
             entity.Property(e => e.NozzleNumber)
                 .HasMaxLength(50)
