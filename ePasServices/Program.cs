@@ -59,7 +59,13 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
         //var key = Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]); 
-        var jwtKey = builder.Configuration["Jwt:Key"] ?? "dT9kx4UJm3qzXv8YLnG1WAZfsVQ7HJp0";
+        var jwtKey = builder.Configuration["Jwt:Key"];
+        if (string.IsNullOrWhiteSpace(jwtKey))
+        {
+            Console.WriteLine("Jwt:Key tidak ditemukan, menggunakan default bawaan.");
+            jwtKey = "dT9kx4UJm3qzXv8YLnG1WAZfsVQ7HJp0";
+        }
+
         var key = Encoding.UTF8.GetBytes(jwtKey);
 
         options.TokenValidationParameters = new TokenValidationParameters
