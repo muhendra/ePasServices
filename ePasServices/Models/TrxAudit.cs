@@ -7,6 +7,10 @@ public partial class TrxAudit
 {
     public string Id { get; set; } = null!;
 
+    public string? ReportPrefix { get; set; }
+
+    public string? ReportNo { get; set; }
+
     public string SpbuId { get; set; } = null!;
 
     public string? AppUserId { get; set; }
@@ -21,7 +25,7 @@ public partial class TrxAudit
 
     public DateOnly? AuditScheduleDate { get; set; }
 
-    public DateOnly? AuditExecutionDate { get; set; }
+    public DateTime? AuditExecutionTime { get; set; }
 
     public int? AuditMediaUpload { get; set; }
 

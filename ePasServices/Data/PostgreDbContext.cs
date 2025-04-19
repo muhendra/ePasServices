@@ -420,7 +420,9 @@ public partial class PostgreDbContext : DbContext
             entity.Property(e => e.AppUserId)
                 .HasMaxLength(50)
                 .HasColumnName("app_user_id");
-            entity.Property(e => e.AuditExecutionDate).HasColumnName("audit_execution_date");
+            entity.Property(e => e.AuditExecutionTime)
+                .HasColumnType("timestamp(3) without time zone")
+                .HasColumnName("audit_execution_time");
             entity.Property(e => e.AuditLevel)
                 .HasMaxLength(100)
                 .HasColumnName("audit_level");
@@ -445,6 +447,12 @@ public partial class PostgreDbContext : DbContext
             entity.Property(e => e.MasterQuestionerIntroId)
                 .HasMaxLength(50)
                 .HasColumnName("master_questioner_intro_id");
+            entity.Property(e => e.ReportNo)
+                .HasMaxLength(50)
+                .HasColumnName("report_no");
+            entity.Property(e => e.ReportPrefix)
+                .HasMaxLength(50)
+                .HasColumnName("report_prefix");
             entity.Property(e => e.SpbuId)
                 .HasMaxLength(50)
                 .HasColumnName("spbu_id");
@@ -498,12 +506,15 @@ public partial class PostgreDbContext : DbContext
             entity.Property(e => e.MasterQuestionerDetailId)
                 .HasMaxLength(50)
                 .HasColumnName("master_questioner_detail_id");
-            entity.Property(e => e.Point)
+            entity.Property(e => e.ScoreAf)
                 .HasPrecision(5, 2)
-                .HasColumnName("point");
+                .HasColumnName("score_af");
             entity.Property(e => e.ScoreInput)
                 .HasMaxLength(50)
                 .HasColumnName("score_input");
+            entity.Property(e => e.ScoreX)
+                .HasPrecision(5, 2)
+                .HasColumnName("score_x");
             entity.Property(e => e.Status)
                 .HasMaxLength(100)
                 .HasColumnName("status");

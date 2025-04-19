@@ -45,9 +45,8 @@ public class TrxAuditService : ITrxAuditService
 
     public async Task<(bool Success, string Message)> StartAuditAsync(string username, string auditId)
     {
-        // Check trx_audit exists dan cocok dengan username
         var trxAuditSql = @"
-        SELECT a.id, a.status, u.id AS AppUserId
+        SELECT a.id, a.status, a.app_user_id 
         FROM trx_audit a 
         INNER JOIN app_user u ON u.id = a.app_user_id
         WHERE a.id = @auditId AND u.username = @username";
@@ -56,28 +55,66 @@ public class TrxAuditService : ITrxAuditService
         if (trxAudit == null)
             return (false, "Audit tidak ditemukan atau bukan milik user ini");
 
-        // Ambil master_questioner aktif hari ini
+        string newStatus = "IN_PROGRESS_INPUT";
+
         var masterSql = @"
-        SELECT id FROM master_questioner 
+        SELECT id, category FROM master_questioner 
         WHERE current_date BETWEEN effective_start_date AND effective_end_date
-        ORDER BY effective_end_date DESC
+        ORDER BY effective_end_date DESC";
+
+        var questioners = (await _conn.QueryAsync<dynamic>(masterSql)).ToList();
+
+        var introSql = @"
+        SELECT mq.id 
+        FROM trx_audit ta  
+        LEFT JOIN master_questioner mq ON ta.master_questioner_intro_id = mq.id 
+        WHERE mq.category = 'INTRO' 
+        ORDER BY mq.version DESC 
+        LIMIT 1";
+        
+        string? introId = await _conn.ExecuteScalarAsync<string?>(introSql);
+        
+        var checklistSql = @"
+        SELECT mq.id 
+        FROM trx_audit ta  
+        LEFT JOIN master_questioner mq ON ta.master_questioner_checklist_id = mq.id 
+        WHERE mq.category = 'CHECKLIST' 
+        ORDER BY mq.version DESC 
         LIMIT 1";
 
-        var questionerId = await _conn.ExecuteScalarAsync<string?>(masterSql);
+        string? checklistId = await _conn.ExecuteScalarAsync<string?>(checklistSql);
 
-        // Jika status != NOT_STARTED, update status
-        string newStatus = trxAudit.status == "NOT_STARTED" ? trxAudit.status : "IN_PROGRESS_INPUT";
 
-        // Update trx_audit
+        var countSql = "SELECT COUNT(1) FROM trx_audit where report_prefix = 'CB/AI/'";
+        var totalAuditCount = await _conn.ExecuteScalarAsync<int>(countSql);
+        var reportPrefix = "CB/AI/";
+        var reportNo = reportPrefix + (totalAuditCount + 1).ToString("D4");
+        var audit_execution_time = DateTime.Now;
+
         var updateSql = @"
         UPDATE trx_audit 
-        SET status = @newStatus, 
-            master_questioner_id = @questionerId, 
-            updated_by = @username, 
-            updated_date = CURRENT_TIMESTAMP
+        SET status = @newStatus,
+            master_questioner_intro_id = @introId,
+            master_questioner_checklist_id = @checklistId,
+            updated_by = @username,
+            updated_date = CURRENT_TIMESTAMP,
+            audit_execution_time = CURRENT_TIMESTAMP,
+            report_prefix = @reportPrefix,
+            report_no = @reportNo
         WHERE id = @auditId";
 
-        var affected = await _conn.ExecuteAsync(updateSql, new { newStatus, questionerId, username, auditId });
+        var affected = await _conn.ExecuteAsync(updateSql, new
+        {
+            newStatus,
+            introId,
+            checklistId,
+            username,
+            auditId,
+            reportPrefix,
+            reportNo,
+            audit_execution_time
+        });
+
         return affected > 0
             ? (true, "Audit berhasil dimulai")
             : (false, "Gagal memperbarui audit");

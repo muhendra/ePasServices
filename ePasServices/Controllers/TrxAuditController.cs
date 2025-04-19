@@ -70,7 +70,7 @@ namespace ePasServices.Controllers
             var audit = await _context.TrxAudits.FirstOrDefaultAsync(x => x.Id == request.Id && x.AppUserId == user.Id);
             if (audit == null) return (false, "Audit tidak ditemukan atau bukan milik user ini");
 
-            audit.AuditExecutionDate = DateOnly.FromDateTime(request.AuditExecutionDate);
+            audit.AuditExecutionTime = request.AuditExecutionDate;
             audit.AuditMediaUpload = 0;
             audit.AuditMediaTotal = request.AuditMediaTotal;
             audit.Status = "IN_PROGRESS_SUBMIT";

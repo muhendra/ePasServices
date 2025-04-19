@@ -13,7 +13,9 @@ public partial class TrxAuditChecklist
 
     public string? ScoreInput { get; set; }
 
-    public decimal? Point { get; set; }
+    public decimal? ScoreAf { get; set; }
+
+    public decimal? ScoreX { get; set; }
 
     public string? Comment { get; set; }
 
