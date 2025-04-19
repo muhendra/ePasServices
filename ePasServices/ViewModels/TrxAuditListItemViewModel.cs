@@ -13,11 +13,10 @@
             "BELUM_DIMULAI" => "Belum Dimulai",
             "SEDANG_BERLANGSUNG" => "Sedang Berlangsung",
             "REVIEW" => "Sedang Ditinjau",
-            "VERIFIED" => "Terverfikasi",
+            "VERIFIED" => "Terverifikasi",
             _ => Status
         };
 
-        // Ini gantikan yang sebelumnya
         public SpbuViewModel Spbu { get; set; }
     }
 
@@ -28,4 +27,5 @@
         public double? Longitude { get; set; }
         public string[] Images { get; set; } = Array.Empty<string>();
     }
+
 }

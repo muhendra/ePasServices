@@ -17,27 +17,38 @@ public class TrxAuditService : ITrxAuditService
         var offset = (page - 1) * limit;
 
         var sql = @"
-            SELECT
-                a.id,
-                a.audit_level AS AuditLevel,
-                a.audit_type AS AuditType,
-                a.audit_schedule_date AS AuditScheduleDate,
-                a.status AS Status,
-                s.spbu_no AS SpbuNo,
-                s.latitude,
-                s.longitude,
-                ARRAY(
-                    SELECT filepath FROM spbu_image si
-                    WHERE si.spbu_id = s.id
-                ) AS Images
-            FROM trx_audit a
-            INNER JOIN spbu s ON s.id = a.spbu_id
-            ORDER BY a.created_date DESC
-            LIMIT @limit OFFSET @offset;";
+        SELECT
+            a.id,
+            a.audit_level AS AuditLevel,
+            a.audit_type AS AuditType,
+            a.audit_schedule_date AS AuditScheduleDate,
+            a.status AS Status,
+            s.spbu_no AS SpbuNo,
+            s.latitude,
+            s.longitude,
+            ARRAY(
+                SELECT filepath FROM spbu_image si
+                WHERE si.spbu_id = s.id
+            ) AS Images
+        FROM trx_audit a
+        INNER JOIN spbu s ON s.id = a.spbu_id
+        ORDER BY a.created_date DESC
+        LIMIT @limit OFFSET @offset;";
 
         var countSql = "SELECT COUNT(*) FROM trx_audit";
 
-        var items = (await _conn.QueryAsync<TrxAuditListItemViewModel>(sql, new { limit, offset })).ToList();
+        // mapping dengan splitOn berdasarkan kolom pertama dari object kedua
+        var items = (await _conn.QueryAsync<TrxAuditListItemViewModel, SpbuViewModel, TrxAuditListItemViewModel>(
+            sql,
+            (audit, spbu) =>
+            {
+                audit.Spbu = spbu;
+                return audit;
+            },
+            new { limit, offset },
+            splitOn: "SpbuNo"
+        )).ToList();
+
         var total = await _conn.ExecuteScalarAsync<int>(countSql);
 
         return (items, total);
