@@ -38,11 +38,21 @@ public class RenewAccessController : ControllerBase
             return Unauthorized(new ApiResponse("Your account has been used by someone else", null));
 
         var jwtKey = Encoding.UTF8.GetBytes(_config["Jwt:Key"]);
+
+        // Generate token baru
         var newAccessToken = TokenHelper.GenerateAccessToken(username, refreshInfo.App, jwtKey);
+        var newRefreshToken = TokenHelper.GenerateRefreshToken(username, jwtKey);
+
+        // Simpan suffix refresh token baru
+        string newSuffix = newRefreshToken[^25..];
+        await _userService.UpdateSuffixRefreshTokenAsync(username, newSuffix);
 
         return Ok(new ApiResponse("Success", new
         {
-            accessToken = newAccessToken
+            accessToken = newAccessToken,
+            refreshToken = newRefreshToken
         }));
     }
+
+
 }

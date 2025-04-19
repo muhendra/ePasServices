@@ -13,4 +13,6 @@ public interface IAppUserService
     Task<bool> UpdateNotificationTokenAsync(string username, string token);
     Task<string?> GetAppUserIdByUsernameAsync(string username);
     Task<AppUser?> GetUserByEmailAsync(string email);
+    Task UpdateSuffixRefreshTokenAsync(string username, string suffix);
+
 }

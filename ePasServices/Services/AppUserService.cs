@@ -167,4 +167,17 @@ public class AppUserService : IAppUserService
         var sql = "SELECT * FROM app_user WHERE email = @email AND status = 'ACTIVE'";
         return await _conn.QueryFirstOrDefaultAsync<AppUser>(sql, new { email });
     }
+
+    public async Task UpdateSuffixRefreshTokenAsync(string username, string suffix)
+    {
+        var sql = @"
+        UPDATE app_user 
+        SET suffix_refresh_token = @suffix,
+            updated_date = CURRENT_TIMESTAMP
+        WHERE username = @username AND status = 'ACTIVE';
+    ";
+
+        await _conn.ExecuteAsync(sql, new { username, suffix });
+    }
+
 }
