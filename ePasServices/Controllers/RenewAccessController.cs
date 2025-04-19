@@ -34,8 +34,8 @@ public class RenewAccessController : ControllerBase
         if (refreshInfo == null)
             return StatusCode(500, new ApiResponse("Error generate token [001]", "User tidak ditemukan"));
 
-        if (refreshInfo.SuffixRefreshToken != suffixRefreshToken)
-            return Unauthorized(new ApiResponse("Your account has been used by someone else", null));
+        //if (refreshInfo.SuffixRefreshToken != suffixRefreshToken)
+        //    return Unauthorized(new ApiResponse("Your account has been used by someone else", null));
 
         var jwtKey = Encoding.UTF8.GetBytes(_config["Jwt:Key"]);
 
