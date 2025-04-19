@@ -188,6 +188,7 @@ namespace ePasServices.Controllers
                 MediaType = mediaType,
                 MediaPath = $"/uploads/{id}/{fileName}",
                 MasterQuestionerDetailId = type == "MOM" ? null : detailId,
+                Status = "ok",
                 CreatedBy = username,
                 CreatedDate = DateTime.UtcNow.ToLocalTime(),
                 UpdatedBy = username,
