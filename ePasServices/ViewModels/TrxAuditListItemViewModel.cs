@@ -8,11 +8,6 @@
         public DateTime? AuditScheduleDate { get; set; }
         public string Status { get; set; }
 
-        public string SpbuNo { get; set; }
-        public double? Latitude { get; set; }
-        public double? Longitude { get; set; }
-        public string[] Images { get; set; }
-
         public string AuditStatus => Status switch
         {
             "BELUM_DIMULAI" => "Belum Dimulai",
@@ -22,12 +17,15 @@
             _ => Status
         };
 
-        public object Spbu => new
-        {
-            spbuNo = SpbuNo,
-            latitude = Latitude,
-            longitude = Longitude,
-            images = Images ?? Array.Empty<string>()
-        };
+        // Ini gantikan yang sebelumnya
+        public SpbuViewModel Spbu { get; set; }
+    }
+
+    public class SpbuViewModel
+    {
+        public string SpbuNo { get; set; }
+        public double? Latitude { get; set; }
+        public double? Longitude { get; set; }
+        public string[] Images { get; set; } = Array.Empty<string>();
     }
 }
