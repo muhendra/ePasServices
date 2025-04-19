@@ -33,7 +33,7 @@ public partial class TrxAudit
 
     public string? AuditMomIntro { get; set; }
 
-    public string? AuditMomChecklist { get; set; }
+    public string? AuditMomFinal { get; set; }
 
     public string Status { get; set; } = null!;
 

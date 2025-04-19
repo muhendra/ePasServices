@@ -9,6 +9,8 @@ public partial class Spbu
 
     public string SpbuNo { get; set; } = null!;
 
+    public string Region { get; set; } = null!;
+
     public string ProvinceName { get; set; } = null!;
 
     public string CityName { get; set; } = null!;
@@ -31,6 +33,8 @@ public partial class Spbu
 
     public string? Sbm { get; set; }
 
+    public string? Sam { get; set; }
+
     public string? Type { get; set; }
 
     public string? PhoneNumber1 { get; set; }
@@ -42,6 +46,18 @@ public partial class Spbu
     public double? Latitude { get; set; }
 
     public double? Longitude { get; set; }
+
+    public string? AuditCurrent { get; set; }
+
+    public string? AuditNext { get; set; }
+
+    public string? StatusGood { get; set; }
+
+    public string? StatusExcellent { get; set; }
+
+    public decimal? AuditCurrentScore { get; set; }
+
+    public DateTime? AuditCurrentTime { get; set; }
 
     public string Status { get; set; } = null!;
 

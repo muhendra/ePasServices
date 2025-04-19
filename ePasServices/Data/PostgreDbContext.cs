@@ -322,6 +322,18 @@ public partial class PostgreDbContext : DbContext
                 .HasDefaultValueSql("uuid_generate_v4()")
                 .HasColumnName("id");
             entity.Property(e => e.Address).HasColumnName("address");
+            entity.Property(e => e.AuditCurrent)
+                .HasMaxLength(100)
+                .HasColumnName("audit_current");
+            entity.Property(e => e.AuditCurrentScore)
+                .HasPrecision(5, 2)
+                .HasColumnName("audit_current_score");
+            entity.Property(e => e.AuditCurrentTime)
+                .HasColumnType("timestamp(3) without time zone")
+                .HasColumnName("audit_current_time");
+            entity.Property(e => e.AuditNext)
+                .HasMaxLength(100)
+                .HasColumnName("audit_next");
             entity.Property(e => e.CityName)
                 .HasMaxLength(255)
                 .HasColumnName("city_name");
@@ -359,9 +371,15 @@ public partial class PostgreDbContext : DbContext
                 .HasMaxLength(255)
                 .HasColumnName("province_name");
             entity.Property(e => e.Quater).HasColumnName("quater");
+            entity.Property(e => e.Region)
+                .HasMaxLength(10)
+                .HasColumnName("region");
             entity.Property(e => e.SalesArea)
                 .HasMaxLength(255)
                 .HasColumnName("sales_area");
+            entity.Property(e => e.Sam)
+                .HasMaxLength(255)
+                .HasColumnName("sam");
             entity.Property(e => e.Sbm)
                 .HasMaxLength(255)
                 .HasColumnName("sbm");
@@ -371,6 +389,12 @@ public partial class PostgreDbContext : DbContext
             entity.Property(e => e.Status)
                 .HasMaxLength(100)
                 .HasColumnName("status");
+            entity.Property(e => e.StatusExcellent)
+                .HasMaxLength(100)
+                .HasColumnName("status_excellent");
+            entity.Property(e => e.StatusGood)
+                .HasMaxLength(100)
+                .HasColumnName("status_good");
             entity.Property(e => e.Type)
                 .HasMaxLength(255)
                 .HasColumnName("type");
@@ -428,7 +452,7 @@ public partial class PostgreDbContext : DbContext
                 .HasColumnName("audit_level");
             entity.Property(e => e.AuditMediaTotal).HasColumnName("audit_media_total");
             entity.Property(e => e.AuditMediaUpload).HasColumnName("audit_media_upload");
-            entity.Property(e => e.AuditMomChecklist).HasColumnName("audit_mom_checklist");
+            entity.Property(e => e.AuditMomFinal).HasColumnName("audit_mom_final");
             entity.Property(e => e.AuditMomIntro).HasColumnName("audit_mom_intro");
             entity.Property(e => e.AuditScheduleDate).HasColumnName("audit_schedule_date");
             entity.Property(e => e.AuditType)
