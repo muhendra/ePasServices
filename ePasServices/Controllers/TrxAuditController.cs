@@ -198,7 +198,10 @@ namespace ePasServices.Controllers
             _context.TrxAuditMedia.Add(media);
 
             audit.AuditMediaUpload = (audit.AuditMediaUpload ?? 0) + 1;
-            audit.Status = "UNDER_REVIEW";
+            if (audit.AuditMediaUpload == audit.AuditMediaTotal)
+            {
+                audit.Status = "UNDER_REVIEW";
+            }
             audit.UpdatedBy = username;
             audit.UpdatedDate = DateTime.UtcNow.ToLocalTime();
 
