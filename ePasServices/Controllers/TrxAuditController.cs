@@ -25,9 +25,13 @@ namespace ePasServices.Controllers
 
         [HttpGet("trx-audit")]
         [Authorize]
-        public async Task<IActionResult> GetTrxAudit([FromQuery] int page = 1, [FromQuery] int limit = 10)
+        public async Task<IActionResult> GetTrxAudit([FromQuery] int page = 1, [FromQuery] int limit = 10, [FromQuery] bool history = false)
         {
-            var (data, total) = await _auditService.GetTrxAuditListAsync(page, limit);
+            var username = User.FindFirst("username")?.Value;
+            if (string.IsNullOrEmpty(username))
+                return Unauthorized(new ApiResponse("Unauthorized", "Token invalid"));
+
+            var (data, total) = await _auditService.GetTrxAuditListAsync(page, limit, history, username);
 
             if (data == null || !data.Any())
             {
