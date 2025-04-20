@@ -105,8 +105,8 @@ public class TrxAuditService : ITrxAuditService
         var updateSql = @"
         UPDATE trx_audit 
         SET status = @newStatus,
-            master_questioner_intro_id = @introId,
-            master_questioner_checklist_id = @checklistId,
+            --master_questioner_intro_id = @introId,
+            --master_questioner_checklist_id = @checklistId,
             updated_by = @username,
             updated_date = CURRENT_TIMESTAMP,
             audit_execution_time = CURRENT_TIMESTAMP,
@@ -117,8 +117,8 @@ public class TrxAuditService : ITrxAuditService
         var affected = await _conn.ExecuteAsync(updateSql, new
         {
             newStatus,
-            introId,
-            checklistId,
+            //introId,
+            //checklistId,
             username,
             auditId,
             reportPrefix,
