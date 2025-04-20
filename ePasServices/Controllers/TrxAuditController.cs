@@ -184,6 +184,13 @@ namespace ePasServices.Controllers
                 await file.CopyToAsync(stream);
             }
 
+            // Validasi MasterQuestionerDetailId
+            string? masterQuestionerDetailId = null;
+            if (type != "FINAL")
+            {
+                masterQuestionerDetailId = detailId;
+            }
+
             var media = new TrxAuditMedium
             {
                 Id = Guid.NewGuid().ToString(),
@@ -191,7 +198,7 @@ namespace ePasServices.Controllers
                 Type = type,
                 MediaType = mediaType,
                 MediaPath = $"/uploads/{id}/{fileName}",
-                MasterQuestionerDetailId = type == "MOM" ? null : detailId,
+                MasterQuestionerDetailId = masterQuestionerDetailId,
                 Status = "ok",
                 CreatedBy = username,
                 CreatedDate = DateTime.UtcNow.ToLocalTime(),
@@ -212,6 +219,7 @@ namespace ePasServices.Controllers
             await _context.SaveChangesAsync();
             return Ok(new ApiResponse("Success", "Media berhasil disimpan"));
         }
+
 
     }
 }
