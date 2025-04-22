@@ -22,59 +22,64 @@ public class TrxAuditService : ITrxAuditService
         if (history)
         {
             sql = @"
-        SELECT
-            ta.id,
-            ta.audit_level AS AuditLevel,
-            ta.audit_type AS AuditType,
-            ta.audit_schedule_date AS AuditScheduleDate,
-            ta.status AS Status,
-            s.spbu_no AS SpbuNo,
-            s.latitude,
-            s.longitude,
-            ARRAY(
-                SELECT filepath FROM spbu_image si
-                WHERE si.spbu_id = s.id
-            ) AS Images
-        FROM trx_audit ta
-        INNER JOIN spbu s ON s.id = ta.spbu_id
-        INNER JOIN app_user au ON ta.app_user_id = au.id
-        WHERE ta.status IN ('UNDER_REVIEW', 'VERIFIED')
-        AND au.username = @username
-        ORDER BY ta.created_date DESC
-        LIMIT @limit OFFSET @offset;";
+            SELECT
+                ta.id,
+                ta.audit_level AS AuditLevel,
+                ta.audit_type AS AuditType,
+                ta.audit_schedule_date AS AuditScheduleDate,
+                ta.status AS Status,
+                s.spbu_no AS SpbuNo,
+                s.latitude,
+                s.longitude,
+                ARRAY(
+                    SELECT filepath FROM spbu_image si
+                    WHERE si.spbu_id = s.id
+                ) AS Images
+            FROM trx_audit ta
+            INNER JOIN spbu s ON s.id = ta.spbu_id
+            INNER JOIN app_user au ON ta.app_user_id = au.id
+            WHERE ta.status IN ('UNDER_REVIEW', 'VERIFIED')
+            AND au.username = @username
+            ORDER BY ta.created_date DESC
+            LIMIT @limit OFFSET @offset;";
 
             countSql = @"
-        SELECT COUNT(*)
-        FROM trx_audit ta
-        INNER JOIN app_user au ON ta.app_user_id = au.id
-        WHERE ta.status IN ('UNDER_REVIEW', 'VERIFIED')
-        AND au.username = @username;";
+            SELECT COUNT(*)
+            FROM trx_audit ta
+            INNER JOIN app_user au ON ta.app_user_id = au.id
+            WHERE ta.status IN ('UNDER_REVIEW', 'VERIFIED')
+            AND au.username = @username;";
         }
         else
         {
             sql = @"
-        SELECT
-            ta.id,
-            ta.audit_level AS AuditLevel,
-            ta.audit_type AS AuditType,
-            ta.audit_schedule_date AS AuditScheduleDate,
-            ta.status AS Status,
-            s.spbu_no AS SpbuNo,
-            s.latitude,
-            s.longitude,
-            ARRAY(
-                SELECT filepath FROM spbu_image si
-                WHERE si.spbu_id = s.id
-            ) AS Images
-        FROM trx_audit ta
-        INNER JOIN spbu s ON s.id = ta.spbu_id
-        INNER JOIN app_user au ON ta.app_user_id = au.id
-                WHERE ta.status NOT IN ('UNDER_REVIEW', 'VERIFIED')
-        AND au.username = @username
-        ORDER BY ta.created_date DESC
-        LIMIT @limit OFFSET @offset;";
+            SELECT
+                ta.id,
+                ta.audit_level AS AuditLevel,
+                ta.audit_type AS AuditType,
+                ta.audit_schedule_date AS AuditScheduleDate,
+                ta.status AS Status,
+                s.spbu_no AS SpbuNo,
+                s.latitude,
+                s.longitude,
+                ARRAY(
+                    SELECT filepath FROM spbu_image si
+                    WHERE si.spbu_id = s.id
+                ) AS Images
+            FROM trx_audit ta
+            INNER JOIN spbu s ON s.id = ta.spbu_id
+            INNER JOIN app_user au ON ta.app_user_id = au.id
+            WHERE ta.status NOT IN ('UNDER_REVIEW', 'VERIFIED')
+            AND au.username = @username
+            ORDER BY ta.created_date DESC
+            LIMIT @limit OFFSET @offset;";
 
-            countSql = "SELECT COUNT(*) FROM trx_audit ta INNER JOIN app_user au ON ta.app_user_id = au.id WHERE ta.status NOT IN ('UNDER_REVIEW', 'VERIFIED') AND au.username = @username;";
+            countSql = @"
+            SELECT COUNT(*)
+            FROM trx_audit ta
+            INNER JOIN app_user au ON ta.app_user_id = au.id
+            WHERE ta.status NOT IN ('UNDER_REVIEW', 'VERIFIED')
+            AND au.username = @username;";
         }
 
         var items = (await _conn.QueryAsync<TrxAuditListItemViewModel, SpbuViewModel, TrxAuditListItemViewModel>(
@@ -93,7 +98,6 @@ public class TrxAuditService : ITrxAuditService
         return (items, total);
     }
 
-
     public async Task<(bool Success, string Message)> StartAuditAsync(string username, string auditId)
     {
         var trxAuditSql = @"
@@ -108,33 +112,29 @@ public class TrxAuditService : ITrxAuditService
 
         string newStatus = "IN_PROGRESS_INPUT";
 
-        var masterSql = @"
-        SELECT id, category FROM master_questioner 
-        WHERE current_date BETWEEN effective_start_date AND effective_end_date
-        ORDER BY effective_end_date DESC";
-
-        var questioners = (await _conn.QueryAsync<dynamic>(masterSql)).ToList();
-
         var introSql = @"
         SELECT mq.id 
         FROM trx_audit ta  
         LEFT JOIN master_questioner mq ON ta.master_questioner_intro_id = mq.id 
-        WHERE mq.category = 'INTRO' 
+        WHERE mq.category = 'INTRO'
+          AND ta.audit_type = mq.type
+          AND ta.id = @auditId
         ORDER BY mq.version DESC 
         LIMIT 1";
-        
-        string? introId = await _conn.ExecuteScalarAsync<string?>(introSql);
-        
+
+        string? introId = await _conn.ExecuteScalarAsync<string?>(introSql, new { auditId });
+
         var checklistSql = @"
         SELECT mq.id 
         FROM trx_audit ta  
         LEFT JOIN master_questioner mq ON ta.master_questioner_checklist_id = mq.id 
-        WHERE mq.category = 'CHECKLIST' 
+        WHERE mq.category = 'CHECKLIST'
+          AND ta.audit_type = mq.type
+          AND ta.id = @auditId
         ORDER BY mq.version DESC 
         LIMIT 1";
 
-        string? checklistId = await _conn.ExecuteScalarAsync<string?>(checklistSql);
-
+        string? checklistId = await _conn.ExecuteScalarAsync<string?>(checklistSql, new { auditId });
 
         var countSql = "SELECT COUNT(1) FROM trx_audit where report_prefix = 'CB/AI/'";
         var totalAuditCount = await _conn.ExecuteScalarAsync<int>(countSql);
@@ -145,8 +145,8 @@ public class TrxAuditService : ITrxAuditService
         var updateSql = @"
         UPDATE trx_audit 
         SET status = @newStatus,
-            --master_questioner_intro_id = @introId,
-            --master_questioner_checklist_id = @checklistId,
+            master_questioner_intro_id = @introId,
+            master_questioner_checklist_id = @checklistId,
             updated_by = @username,
             updated_date = CURRENT_TIMESTAMP,
             audit_execution_time = CURRENT_TIMESTAMP,
@@ -157,8 +157,8 @@ public class TrxAuditService : ITrxAuditService
         var affected = await _conn.ExecuteAsync(updateSql, new
         {
             newStatus,
-            //introId,
-            //checklistId,
+            introId,
+            checklistId,
             username,
             auditId,
             reportPrefix,
