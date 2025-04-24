@@ -5,6 +5,9 @@ using ePasServices.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Processing;
+
 
 namespace ePasServices.Controllers
 {
@@ -179,9 +182,23 @@ namespace ePasServices.Controllers
             var fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
             var filePath = Path.Combine(uploadsFolder, fileName);
 
-            using (var stream = new FileStream(filePath, FileMode.Create))
+            try
             {
-                await file.CopyToAsync(stream);
+                if (file.ContentType.StartsWith("image/"))
+                {
+                    using var image = await Image.LoadAsync(file.OpenReadStream());
+                    image.Mutate(x => x.AutoOrient());
+                    await image.SaveAsync(filePath);
+                }
+                else
+                {
+                    using var stream = new FileStream(filePath, FileMode.Create);
+                    await file.CopyToAsync(stream);
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new ApiResponse("Error", $"Gagal memproses file: {ex.Message}"));
             }
 
             // Validasi MasterQuestionerDetailId
