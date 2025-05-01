@@ -40,7 +40,7 @@ public class TrxAuditService : ITrxAuditService
             INNER JOIN app_user au ON ta.app_user_id = au.id
             WHERE ta.status IN ('UNDER_REVIEW', 'VERIFIED')
             AND au.username = @username
-            ORDER BY ta.created_date DESC
+            ORDER BY ta.audit_schedule_date ASC
             LIMIT @limit OFFSET @offset;";
 
             countSql = @"
@@ -71,7 +71,7 @@ public class TrxAuditService : ITrxAuditService
             INNER JOIN app_user au ON ta.app_user_id = au.id
             WHERE ta.status NOT IN ('UNDER_REVIEW', 'VERIFIED')
             AND au.username = @username
-            ORDER BY ta.created_date DESC
+            ORDER BY ta.audit_schedule_date ASC
             LIMIT @limit OFFSET @offset;";
 
             countSql = @"
@@ -112,29 +112,29 @@ public class TrxAuditService : ITrxAuditService
 
         string newStatus = "IN_PROGRESS_INPUT";
 
-        var introSql = @"
-        SELECT mq.id 
-        FROM trx_audit ta  
-        LEFT JOIN master_questioner mq ON ta.master_questioner_intro_id = mq.id 
-        WHERE mq.category = 'INTRO'
-          AND ta.audit_type = mq.type
-          AND ta.id = @auditId
-        ORDER BY mq.version DESC 
-        LIMIT 1";
+        //var introSql = @"
+        //SELECT mq.id 
+        //FROM trx_audit ta  
+        //LEFT JOIN master_questioner mq ON ta.master_questioner_intro_id = mq.id 
+        //WHERE mq.category = 'INTRO'
+        //  AND ta.audit_type = mq.type
+        //  AND ta.id = @auditId
+        //ORDER BY mq.version DESC 
+        //LIMIT 1";
 
-        string? introId = await _conn.ExecuteScalarAsync<string?>(introSql, new { auditId });
+        //string? introId = await _conn.ExecuteScalarAsync<string?>(introSql, new { auditId });
 
-        var checklistSql = @"
-        SELECT mq.id 
-        FROM trx_audit ta  
-        LEFT JOIN master_questioner mq ON ta.master_questioner_checklist_id = mq.id 
-        WHERE mq.category = 'CHECKLIST'
-          AND ta.audit_type = mq.type
-          AND ta.id = @auditId
-        ORDER BY mq.version DESC 
-        LIMIT 1";
+        //var checklistSql = @"
+        //SELECT mq.id 
+        //FROM trx_audit ta  
+        //LEFT JOIN master_questioner mq ON ta.master_questioner_checklist_id = mq.id 
+        //WHERE mq.category = 'CHECKLIST'
+        //  AND ta.audit_type = mq.type
+        //  AND ta.id = @auditId
+        //ORDER BY mq.version DESC 
+        //LIMIT 1";
 
-        string? checklistId = await _conn.ExecuteScalarAsync<string?>(checklistSql, new { auditId });
+        //string? checklistId = await _conn.ExecuteScalarAsync<string?>(checklistSql, new { auditId });
 
         var countSql = "SELECT COUNT(1) FROM trx_audit where report_prefix = 'CB/AI/'";
         var totalAuditCount = await _conn.ExecuteScalarAsync<int>(countSql);
@@ -145,8 +145,6 @@ public class TrxAuditService : ITrxAuditService
         var updateSql = @"
         UPDATE trx_audit 
         SET status = @newStatus,
-            master_questioner_intro_id = @introId,
-            master_questioner_checklist_id = @checklistId,
             updated_by = @username,
             updated_date = CURRENT_TIMESTAMP,
             audit_execution_time = CURRENT_TIMESTAMP,
@@ -157,8 +155,6 @@ public class TrxAuditService : ITrxAuditService
         var affected = await _conn.ExecuteAsync(updateSql, new
         {
             newStatus,
-            introId,
-            checklistId,
             username,
             auditId,
             reportPrefix,
