@@ -158,8 +158,7 @@ public class TrxAuditService : ITrxAuditService
             username,
             auditId,
             reportPrefix,
-            reportNo,
-            audit_execution_time
+            reportNo
         });
 
         return affected > 0
