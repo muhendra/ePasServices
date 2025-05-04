@@ -29,6 +29,7 @@ public class TrxAuditService : ITrxAuditService
                 ta.audit_schedule_date AS AuditScheduleDate,
                 ta.status AS Status,
                 s.spbu_no AS SpbuNo,
+                s.address,
                 s.latitude,
                 s.longitude,
                 ARRAY(
@@ -60,6 +61,7 @@ public class TrxAuditService : ITrxAuditService
                 ta.audit_schedule_date AS AuditScheduleDate,
                 ta.status AS Status,
                 s.spbu_no AS SpbuNo,
+                s.Address,
                 s.latitude,
                 s.longitude,
                 ARRAY(
