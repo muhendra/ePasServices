@@ -8,5 +8,6 @@ namespace ePasServices.Services.Interfaces
 
         Task<(bool Success, string Message)> StartAuditAsync(string username, string auditId);
 
+        Task<int> CountInProgressAsync(string username);
     }
 }

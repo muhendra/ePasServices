@@ -100,6 +100,19 @@ public class TrxAuditService : ITrxAuditService
         return (items, total);
     }
 
+    public async Task<int> CountInProgressAsync(string username)
+    {
+        var countSql = @"
+            SELECT COUNT(*)
+            FROM trx_audit ta
+            INNER JOIN app_user au ON ta.app_user_id = au.id
+            WHERE ta.status IN ('IN_PROGRESS_INPUT', 'IN_PROGRESS_SUBMIT')
+              AND au.username = @username;
+        ";
+
+        return await _conn.ExecuteScalarAsync<int>(countSql, new { username });
+    }
+
     public async Task<(bool Success, string Message)> StartAuditAsync(string username, string auditId)
     {
         var trxAuditSql = @"

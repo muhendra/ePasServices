@@ -52,6 +52,34 @@ namespace ePasServices.Controllers
             });
         }
 
+        [HttpGet("trx-audit/count-in-progress")]
+        [Authorize]
+        public async Task<IActionResult> GetCountInProgress()
+        {
+            var username = User.FindFirst("username")?.Value;
+            if (string.IsNullOrEmpty(username))
+                return Unauthorized(new ApiResponse("Unauthorized", "Token invalid"));
+
+            try
+            {
+                var count = await _auditService.CountInProgressAsync(username);
+                return Ok(new
+                {
+                    Success = true,
+                    Count = count
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    Success = false,
+                    Message = "Terjadi kesalahan pada server.",
+                    Detail = ex.Message
+                });
+            }
+        }
+
         [HttpPost("trx-audit/start")]
         [Authorize]
         public async Task<IActionResult> StartAudit([FromBody] TrxAuditStartRequest request)
