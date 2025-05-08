@@ -46,12 +46,12 @@ public class LoginController : ControllerBase
             return BadRequest(new ApiResponse("Error Validation", errors));
 
         var requestTime = DateTimeOffset.FromUnixTimeSeconds(request.Timestamp).LocalDateTime;
-        var nowMinus1Hour = DateTime.Now.AddHours(-1);
+        var nowMinus3Hours = DateTime.Now.AddHours(-3);
 
         //BUAT TEST
         if (request.Username != "auditor")
         {
-            if (requestTime < nowMinus1Hour)
+            if (requestTime < nowMinus3Hours)
                 return BadRequest(new ApiResponse("Invalid Request", "Request anda sudah kedaluwarsa"));
         }
 
