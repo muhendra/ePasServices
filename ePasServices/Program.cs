@@ -10,6 +10,13 @@ using ePasServices.Helpers;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Configure Kestrel settings
+builder.WebHost.ConfigureKestrel(serverOptions =>
+{
+    // Set MaxRequestBodySize to 2GB
+    serverOptions.Limits.MaxRequestBodySize = 2L * 1024 * 1024 * 1024; // 2 GB
+});
+
 //PROD
 builder.WebHost.UseUrls("http://0.0.0.0:5000");
 
