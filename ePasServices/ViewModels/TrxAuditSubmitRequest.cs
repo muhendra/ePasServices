@@ -4,6 +4,7 @@
     public int AuditMediaTotal { get; set; }
     public DateTime AuditExecutionDate { get; set; }
     public string? AuditMomIntro { get; set; }
+    public string? AuditMomFinal { get; set; }
     public string? AuditMomChecklist { get; set; }
     public List<ChecklistAnswer>? Checklist { get; set; }
     public List<AuditQQ>? QQ { get; set; }

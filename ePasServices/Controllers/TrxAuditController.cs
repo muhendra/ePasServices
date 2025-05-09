@@ -118,9 +118,19 @@ namespace ePasServices.Controllers
             audit.AuditMediaUpload = 0;
             audit.AuditMediaTotal = request.AuditMediaTotal;
             audit.Status = "IN_PROGRESS_SUBMIT";
+            audit.UpdatedDate = DateTime.Now;
+            audit.UpdatedBy = username;
+            audit.AuditMomIntro = request.AuditMomIntro;
+            audit.AuditMomFinal = request.AuditMomFinal;
 
-            if (!string.IsNullOrWhiteSpace(request.AuditMomIntro))
-                audit.AuditMomIntro = request.AuditMomIntro;
+            var existingChecklist = _context.TrxAuditChecklists.Where(x => x.TrxAuditId == audit.Id);
+            _context.TrxAuditChecklists.RemoveRange(existingChecklist);
+
+            var existingQQ = _context.TrxAuditQqs.Where(x => x.TrxAuditId == audit.Id);
+            _context.TrxAuditQqs.RemoveRange(existingQQ);
+
+            var existingMedia = _context.TrxAuditMedia.Where(x => x.TrxAuditId == audit.Id);
+            _context.TrxAuditMedia.RemoveRange(existingMedia);
 
             // Simpan checklist jika ada
             if (request.Checklist != null && request.Checklist.Any())
