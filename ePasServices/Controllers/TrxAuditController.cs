@@ -227,12 +227,19 @@ namespace ePasServices.Controllers
         public async Task<IActionResult> SubmitAuditMediaAsync()
         {
             var form = Request.Form;
-
             var id = form["Id"].ToString();
+
+            _logger.LogInformation("SubmitAuditMediaAsync triggered with AuditId: {AuditId}", id);
+
             var type = form["Type"].ToString();
             var mediaType = form["MediaType"].ToString();
             var detailId = form.ContainsKey("DetailId") ? form["DetailId"].ToString() : null;
             var file = form.Files.FirstOrDefault();
+
+
+            _logger.LogInformation("SubmitAuditMediaAsync data: {type}", type);
+            _logger.LogInformation("SubmitAuditMediaAsync data: {mediaType}", mediaType);
+            _logger.LogInformation("SubmitAuditMediaAsync data: {detailId}", detailId);
 
             if (file == null)
                 return BadRequest(new ApiResponse("Error", "File tidak ditemukan"));
