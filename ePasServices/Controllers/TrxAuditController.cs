@@ -20,11 +20,12 @@ namespace ePasServices.Controllers
         private readonly PostgreDbContext _context;
         private readonly IConfiguration _config;
 
-        public TrxAuditController(ITrxAuditService auditService, PostgreDbContext context, IConfiguration config)
+        public TrxAuditController(ITrxAuditService auditService, PostgreDbContext context, IConfiguration config, ILogger<TrxAuditController> logger)
         {
             _auditService = auditService;
             _context = context;
             _config = config;
+            _logger = logger;
         }
 
         [HttpGet("trx-audit")]
