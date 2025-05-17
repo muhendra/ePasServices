@@ -97,6 +97,21 @@ namespace ePasServices.Controllers
             return Ok(new ApiResponse("Success", result.Message));
         }
 
+        [HttpPost("trx-audit/cancel")]
+        [Authorize]
+        public async Task<IActionResult> CancelAudit([FromBody] TrxAuditCancelRequest request)
+        {
+            var username = User.FindFirst("username")?.Value;
+            if (string.IsNullOrEmpty(username))
+                return Unauthorized(new ApiResponse("Unauthorized", "Token invalid"));
+
+            var result = await _auditService.CancelAuditAsync(username, request.Id);
+            if (!result.Success)
+                return BadRequest(new ApiResponse("Invalid Request", result.Message));
+
+            return Ok(new ApiResponse("Success", result.Message));
+        }
+
         [HttpPost("trx-audit/data-submit")]
         [Authorize]
         public async Task<IActionResult> SubmitAuditDataAsync([FromBody] TrxAuditSubmitRequest request)
@@ -235,7 +250,6 @@ namespace ePasServices.Controllers
             var mediaType = form["MediaType"].ToString();
             var detailId = form.ContainsKey("DetailId") ? form["DetailId"].ToString() : null;
             var file = form.Files.FirstOrDefault();
-
 
             _logger.LogInformation("SubmitAuditMediaAsync data: {type}", type);
             _logger.LogInformation("SubmitAuditMediaAsync data: {mediaType}", mediaType);

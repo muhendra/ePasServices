@@ -1,15 +1,20 @@
 ﻿using Dapper;
+using ePasServices.Data;
+using ePasServices.Models;
 using ePasServices.Services.Interfaces;
 using ePasServices.ViewModels;
+using Microsoft.EntityFrameworkCore;
 using Npgsql;
 
 public class TrxAuditService : ITrxAuditService
 {
     private readonly NpgsqlConnection _conn;
+    private readonly PostgreDbContext _context;
 
-    public TrxAuditService(IConfiguration config)
+    public TrxAuditService(IConfiguration config, PostgreDbContext context)
     {
         _conn = new NpgsqlConnection(config.GetConnectionString("DefaultConnection"));
+        _context = context;
     }
 
     public async Task<(List<TrxAuditListItemViewModel> Data, int Total)> GetTrxAuditListAsync(int page, int limit, bool history, string username)
@@ -179,5 +184,52 @@ public class TrxAuditService : ITrxAuditService
         return affected > 0
             ? (true, "Audit berhasil dimulai")
             : (false, "Gagal memperbarui audit");
+    }
+
+    public async Task<(bool Success, string Message)> CancelAuditAsync(string username, string auditId)
+    {
+        var trxAuditSql = @"
+        SELECT a.id, a.status, a.app_user_id 
+        FROM trx_audit a 
+        INNER JOIN app_user u ON u.id = a.app_user_id
+        WHERE a.id = @auditId AND u.username = @username";
+
+        var trxAudit = await _conn.QueryFirstOrDefaultAsync<dynamic>(trxAuditSql, new { auditId, username });
+        if (trxAudit == null)
+            return (false, "Audit tidak ditemukan atau bukan milik user ini");
+
+        // Hapus data lama
+        var existingChecklist = _context.TrxAuditChecklists.Where(x => x.TrxAuditId == auditId);
+        _context.TrxAuditChecklists.RemoveRange(existingChecklist);
+
+        var existingQQ = _context.TrxAuditQqs.Where(x => x.TrxAuditId == auditId);
+        _context.TrxAuditQqs.RemoveRange(existingQQ);
+
+        var existingMedia = _context.TrxAuditMedia.Where(x => x.TrxAuditId == auditId);
+        _context.TrxAuditMedia.RemoveRange(existingMedia);
+
+        var updateSql = @"
+        UPDATE trx_audit 
+        SET report_prefix = '',
+            report_no = '',
+            audit_execution_time = null,
+            audit_media_upload = 0, 
+            audit_media_total = 0, 
+            audit_mom_intro = '',
+            audit_mom_final = '',
+            status = 'NOT_STARTED',
+            updated_by = @username,
+            updated_date = CURRENT_TIMESTAMP
+        WHERE id = @auditId";
+
+        var affected = await _conn.ExecuteAsync(updateSql, new
+        {
+            username,
+            auditId
+        });
+
+        return affected > 0
+            ? (true, "Audit berhasil di cancel")
+            : (false, "Gagal cancel audit");
     }
 }
