@@ -145,7 +145,6 @@ namespace ePasServices.Controllers
 
             // Update basic audit data
             _logger.LogInformation("Updating audit basic info for AuditId: {AuditId}", audit.Id);
-            audit.AuditExecutionTime = request.AuditExecutionDate;
             audit.AuditMediaUpload = 0;
             audit.AuditMediaTotal = request.AuditMediaTotal;
             audit.Status = "IN_PROGRESS_SUBMIT";
