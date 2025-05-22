@@ -21,7 +21,7 @@ public class AppUserService : IAppUserService
             INNER JOIN app_user_role aur ON aur.app_user_id = au.id 
             INNER JOIN app_role ar ON ar.id = aur.app_role_id 
             WHERE au.username = @username AND au.status = 'ACTIVE' 
-              --AND ar.app IN ('Auditor','SPBU')";
+            AND ar.app IN ('Auditor','SPBU')";
 
         return await _conn.QueryFirstOrDefaultAsync<AppUserLoginDto>(sql, new { username });
     }
