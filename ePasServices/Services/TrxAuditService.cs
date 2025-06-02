@@ -78,7 +78,7 @@ public class TrxAuditService : ITrxAuditService
             INNER JOIN app_user au ON ta.app_user_id = au.id
             WHERE ta.status NOT IN ('UNDER_REVIEW', 'VERIFIED')
             AND au.username = @username
-            ORDER BY ta.audit_schedule_date ASC
+            ORDER BY ta.audit_schedule_date ASC, s.spbu_no ASC
             LIMIT @limit OFFSET @offset;";
 
             countSql = @"
