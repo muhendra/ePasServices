@@ -265,7 +265,7 @@ namespace ePasServices.Controllers
             if (audit == null)
                 return NotFound(new ApiResponse("Error", "Audit tidak ditemukan"));
 
-            var uploadsFolder = Path.Combine("wwwroot", "uploads", id);
+            var uploadsFolder = Path.Combine("/var/www/epasasset", "wwwroot", "uploads", id);
             if (!Directory.Exists(uploadsFolder)) Directory.CreateDirectory(uploadsFolder);
 
             var fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
