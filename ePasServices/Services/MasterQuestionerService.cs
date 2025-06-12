@@ -81,7 +81,7 @@ namespace ePasServices.Services
         private async Task<List<MasterQuestionerDetailItemViewModel>> BuildHierarchy(string masterId, string? parentId)
         {
             var sql = @"
-            SELECT id, title, description, type, score_option AS ScoreOption, order_no AS OrderNo
+            SELECT id, number, title, description, type, score_option AS ScoreOption, order_no AS OrderNo
             FROM master_questioner_detail
             WHERE master_questioner_id = @masterId AND (@parentId IS NULL AND parent_id IS NULL OR parent_id = @parentId)
             ORDER BY order_no";
