@@ -1,6 +1,5 @@
 ﻿using Dapper;
 using ePasServices.Data;
-using ePasServices.Models;
 using ePasServices.Services.Interfaces;
 using ePasServices.ViewModels;
 using Microsoft.EntityFrameworkCore;
@@ -76,7 +75,7 @@ public class TrxAuditService : ITrxAuditService
             FROM trx_audit ta
             INNER JOIN spbu s ON s.id = ta.spbu_id
             INNER JOIN app_user au ON ta.app_user_id = au.id
-            WHERE ta.status NOT IN ('UNDER_REVIEW', 'VERIFIED')
+            WHERE ta.status NOT IN ('UNDER_REVIEW', 'VERIFIED', 'DELETED')
             AND au.username = @username
             ORDER BY ta.audit_schedule_date ASC, s.spbu_no ASC
             LIMIT @limit OFFSET @offset;";
@@ -85,7 +84,7 @@ public class TrxAuditService : ITrxAuditService
             SELECT COUNT(*)
             FROM trx_audit ta
             INNER JOIN app_user au ON ta.app_user_id = au.id
-            WHERE ta.status NOT IN ('UNDER_REVIEW', 'VERIFIED')
+            WHERE ta.status NOT IN ('UNDER_REVIEW', 'VERIFIED', 'DELETED')
             AND au.username = @username;";
         }
 
@@ -103,6 +102,101 @@ public class TrxAuditService : ITrxAuditService
         var total = await _conn.ExecuteScalarAsync<int>(countSql, new { username });
 
         return (items, total);
+    }
+
+    public async Task<(List<TrxAuditListItemForSPBUViewModel> Data, int Total)> GetTrxAuditListForSPBUAsync(int page, int limit, bool history, string username)
+    {
+        var offset = (page - 1) * limit;
+
+        string sql;
+        string countSql;
+
+        if (history)
+        {
+            sql = @"
+            SELECT
+                ta.id,
+                ta.audit_level AS AuditLevel,
+                ta.audit_type AS AuditType,
+                ta.audit_schedule_date AS AuditScheduleDate,
+                ta.status AS Status,
+                au.name AS AuditorName
+            FROM trx_audit ta
+            JOIN app_user au ON ta.app_user_id = au.id
+            JOIN app_user_role aur ON ta.spbu_id = aur.spbu_id
+            JOIN app_user aus ON aus.id = aur.app_user_id
+            WHERE ta.status IN ('UNDER_REVIEW', 'VERIFIED')
+            AND aus.username = @username
+            ORDER BY ta.audit_schedule_date ASC
+            LIMIT @limit OFFSET @offset;";
+
+            countSql = @"
+            SELECT COUNT(*)
+            FROM trx_audit ta
+            JOIN app_user au ON ta.app_user_id = au.id
+            JOIN app_user_role aur ON ta.spbu_id = aur.spbu_id
+            JOIN app_user aus ON aus.id = aur.app_user_id
+            WHERE ta.status IN ('UNDER_REVIEW', 'VERIFIED')
+            AND aus.username = @username;";
+        }
+        else
+        {
+            sql = @"
+            SELECT
+                ta.id,
+                ta.audit_level AS AuditLevel,
+                ta.audit_type AS AuditType,
+                ta.audit_schedule_date AS AuditScheduleDate,
+                ta.status AS Status,
+                au.name AS AuditorName
+            FROM trx_audit ta
+            JOIN app_user au ON ta.app_user_id = au.id
+            JOIN app_user_role aur ON ta.spbu_id = aur.spbu_id
+            JOIN app_user aus ON aus.id = aur.app_user_id
+            WHERE ta.status NOT IN ('UNDER_REVIEW', 'VERIFIED', 'DELETED')
+            AND aus.username = @username
+            ORDER BY ta.audit_schedule_date ASC
+            LIMIT @limit OFFSET @offset;";
+
+            countSql = @"
+            SELECT COUNT(*)
+            FROM trx_audit ta
+            JOIN app_user au ON ta.app_user_id = au.id
+            JOIN app_user_role aur ON ta.spbu_id = aur.spbu_id
+            JOIN app_user aus ON aus.id = aur.app_user_id
+            WHERE ta.status NOT IN ('UNDER_REVIEW', 'VERIFIED', 'DELETED')
+            AND aus.username = @username;";
+        }
+
+        var items = (await _conn.QueryAsync<TrxAuditListItemForSPBUViewModel>(
+            sql,
+            new { limit, offset, username }
+        )).ToList();
+
+        var total = await _conn.ExecuteScalarAsync<int>(countSql, new { username });
+
+        return (items, total);
+    }
+
+    public async Task<TrxAuditDetailForSPBUViewModel?> GetTrxAuditDetailForSPBUAsync(string id, string username)
+    {
+        var sql = @"
+        SELECT
+            ta.id,
+            ta.audit_level AS AuditLevel,
+            ta.audit_type AS AuditType,
+            ta.audit_schedule_date AS AuditScheduleDate,
+            ta.status AS Status,
+            au.name AS AuditorName
+        FROM trx_audit ta
+        JOIN app_user au ON ta.app_user_id = au.id
+        JOIN app_user_role aur ON ta.spbu_id = aur.spbu_id
+        JOIN app_user aus ON aus.id = aur.app_user_id
+        WHERE ta.id = @id
+        AND aus.username = @username;";
+
+        var result = await _conn.QueryFirstOrDefaultAsync<TrxAuditDetailForSPBUViewModel>(sql, new { id, username });
+        return result;
     }
 
     public async Task<int> CountInProgressAsync(string username)
