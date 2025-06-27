@@ -326,4 +326,17 @@ public class TrxAuditService : ITrxAuditService
             ? (true, "Audit berhasil di cancel")
             : (false, "Gagal cancel audit");
     }
+
+    public async Task<List<TrxAuditDetailListResponse>> GetDetailsByTrxAuditIdAsync(string trxAuditId)
+    {
+        const string sql = @"
+            SELECT mqd.id, mqd.number, mqd.title
+            FROM trx_audit_checklist tac
+            INNER JOIN master_questioner_detail mqd ON mqd.id = tac.master_questioner_detail_id
+            WHERE tac.trx_audit_id = @trxAuditId
+            ORDER BY mqd.number";
+
+        var result = await _conn.QueryAsync<TrxAuditDetailListResponse>(sql, new { trxAuditId });
+        return [.. result];
+    }
 }

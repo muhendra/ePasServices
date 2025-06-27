@@ -14,5 +14,8 @@ namespace ePasServices.Services.Interfaces
         Task<(bool Success, string Message)> CancelAuditAsync(string username, string auditId);
 
         Task<int> CountInProgressAsync(string username);
+
+        Task<List<TrxAuditDetailListResponse>> GetDetailsByTrxAuditIdAsync(string trxAuditId);
+        
     }
 }
