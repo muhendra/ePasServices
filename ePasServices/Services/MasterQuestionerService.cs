@@ -186,5 +186,35 @@ namespace ePasServices.Services
 
             return BuildChildren(null);
         }
+
+        public async Task<MasterQuestionerSurveyResponse?> GetLatestSurveyWithDetailsAsync()
+        {
+            const string getSurveyQuery = @"
+            SELECT id FROM master_questioner
+            WHERE type = 'Survey'
+            ORDER BY version DESC
+            LIMIT 1";
+
+            var questionerId = await _conn.QueryFirstOrDefaultAsync<string>(getSurveyQuery);
+
+            if (string.IsNullOrEmpty(questionerId))
+            {
+                return null;
+            }
+
+            const string getDetailsQuery = @"
+                SELECT id, title, order_no as orderNo
+                FROM master_questioner_detail 
+                WHERE master_questioner_id = @QuestionerId
+                ORDER BY order_no ASC";
+
+            var details = (await _conn.QueryAsync<MasterQuestionerSurveyDetailDto>(getDetailsQuery, new { QuestionerId = questionerId })).ToList();
+
+            return new MasterQuestionerSurveyResponse
+            {
+                Id = questionerId,
+                Detail = details
+            };
+        }
     }
 }
