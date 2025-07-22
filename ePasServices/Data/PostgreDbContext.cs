@@ -42,7 +42,7 @@ public partial class PostgreDbContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseNpgsql("Host=34.101.139.4;Port=5432;Database=epas;Username=epas_pertamina;Password=Ep4sU$2025ApR@_Ps$w0rd_P3rtM1N4@0k2025Apr");
+        => optionsBuilder.UseNpgsql("Host=34.128.100.28;Port=5432;Database=epas;Username=epas_pertamina;Password=Ep4sU$2025ApR@_Ps$w0rd_P3rtM1N4@0k2025Apr");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
