@@ -235,7 +235,6 @@ namespace ePasServices.Controllers
             }
         }
 
-
         [HttpPost("trx-audit/media-submit")]
         [Consumes("multipart/form-data")]
         public async Task<IActionResult> SubmitAuditMediaAsync()
@@ -325,7 +324,5 @@ namespace ePasServices.Controllers
             await _context.SaveChangesAsync();
             return Ok(new ApiResponse("Success", "Media berhasil disimpan"));
         }
-
-
     }
 }

@@ -2,7 +2,6 @@
 using Dapper;
 using Npgsql;
 using ePasServices.ViewModels;
-using ePasServices.Services.Interfaces;
 
 public class AppUserService : IAppUserService
 {
@@ -88,9 +87,9 @@ public class AppUserService : IAppUserService
         SELECT 
             au.Name,
             ar.app AS App,
-            s.spbu_no,
-            s.province_name,
-            s.city_name,
+            s.spbu_no as SpbuNo,
+            s.province_name as ProvinceName,
+            s.city_name as CityName,
             s.""type"",
             s.""level"" 
         FROM app_user au
@@ -110,11 +109,11 @@ public class AppUserService : IAppUserService
             Spbu = result.App == "SPBU"
                 ? new SpbuInfo
                 {
-                    spbu_no = result.spbu_no,
-                    province_name = result.province_name,
-                    city_name = result.city_name,
-                    type = result.type,
-                    level = result.level
+                    SpbuNo = result.SpbuNo,
+                    ProvinceName = result.ProvinceName,
+                    CityName = result.CityName,
+                    Type = result.Type,
+                    Level = result.Level
                 }
                 : null
         };

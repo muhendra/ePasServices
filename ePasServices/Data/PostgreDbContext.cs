@@ -40,6 +40,20 @@ public partial class PostgreDbContext : DbContext
 
     public virtual DbSet<TrxAuditQq> TrxAuditQqs { get; set; }
 
+    public virtual DbSet<TrxSurvey> TrxSurveys { get; set; }
+
+    public virtual DbSet<TrxSurveyElement> TrxSurveyElements { get; set; }
+
+    public virtual DbSet<TrxFeedback> TrxFeedbacks { get; set; }
+
+    public virtual DbSet<TrxFeedbackPoint> TrxFeedbackPoints { get; set; }
+
+    public virtual DbSet<TrxFeedbackPointElement> TrxFeedbackPointElements { get; set; }
+
+    public virtual DbSet<TrxFeedbackPointMedia> TrxFeedbackPointMedias { get; set; }
+
+    public virtual DbSet<Notification> Notifications { get; set; }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
         => optionsBuilder.UseNpgsql("Host=34.128.100.28;Port=5432;Database=epas;Username=epas_pertamina;Password=Ep4sU$2025ApR@_Ps$w0rd_P3rtM1N4@0k2025Apr");
@@ -673,6 +687,242 @@ public partial class PostgreDbContext : DbContext
                 .HasForeignKey(d => d.TrxAuditId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("trx_audit_qq_trx_audit_id_fkey");
+        });
+
+        modelBuilder.Entity<TrxSurvey>(entity =>
+        {
+            entity.ToTable("trx_survey");
+
+            entity.HasKey(e => e.Id).HasName("trx_survey_pkey");
+
+            entity.Property(e => e.Id)
+                .HasMaxLength(50)
+                .HasColumnName("id")
+                .HasDefaultValueSql("uuid_generate_v4()");
+
+            entity.Property(e => e.AppUserId)
+                .HasMaxLength(50)
+                .HasColumnName("app_user_id");
+
+            entity.Property(e => e.MasterQuestionerId)
+                .HasMaxLength(50)
+                .HasColumnName("master_questioner_id");
+
+            entity.Property(e => e.Status)
+                .HasMaxLength(100)
+                .HasColumnName("status");
+
+            entity.Property(e => e.CreatedBy)
+                .HasMaxLength(50)
+                .HasColumnName("created_by");
+
+            entity.Property(e => e.CreatedDate)
+                .HasColumnType("timestamp(3)")
+                .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                .HasColumnName("created_date");
+
+            entity.Property(e => e.UpdatedBy)
+                .HasMaxLength(50)
+                .HasColumnName("updated_by");
+
+            entity.Property(e => e.UpdatedDate)
+                .HasColumnType("timestamp")
+                .HasColumnName("updated_date");
+
+            entity.HasOne(d => d.AppUser)
+                .WithMany(p => p.TrxSurveys)
+                .HasForeignKey(d => d.AppUserId)
+                .HasConstraintName("trx_survey_app_user_id_fkey");
+
+            entity.HasOne(d => d.MasterQuestioner)
+                .WithMany(p => p.TrxSurveys)
+                .HasForeignKey(d => d.MasterQuestionerId)
+                .HasConstraintName("trx_survey_master_questioner_id_fkey");
+        });
+
+        modelBuilder.Entity<TrxSurveyElement>(entity =>
+        {
+            entity.ToTable("trx_survey_element");
+
+            entity.HasKey(e => e.Id).HasName("trx_survey_element_pkey");
+
+            entity.Property(e => e.Id)
+                .HasMaxLength(50)
+                .HasColumnName("id")
+                .HasDefaultValueSql("uuid_generate_v4()");
+
+            entity.Property(e => e.TrxSurveyId)
+                .HasMaxLength(50)
+                .HasColumnName("trx_survey_id");
+
+            entity.Property(e => e.MasterQuestionerDetailId)
+                .HasMaxLength(50)
+                .HasColumnName("master_questioner_detail_id");
+
+            entity.Property(e => e.ScoreInput)
+                .HasMaxLength(255)
+                .HasColumnName("score_input");
+
+            entity.Property(e => e.Status)
+                .HasMaxLength(100)
+                .HasColumnName("status");
+
+            entity.Property(e => e.CreatedBy)
+                .HasMaxLength(50)
+                .HasColumnName("created_by");
+
+            entity.Property(e => e.CreatedDate)
+                .HasColumnType("timestamp(3)")
+                .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                .HasColumnName("created_date");
+
+            entity.Property(e => e.UpdatedBy)
+                .HasMaxLength(50)
+                .HasColumnName("updated_by");
+
+            entity.Property(e => e.UpdatedDate)
+                .HasColumnType("timestamp")
+                .HasColumnName("updated_date");
+
+            entity.HasOne(d => d.TrxSurvey)
+                .WithMany(p => p.TrxSurveyElements)
+                .HasForeignKey(d => d.TrxSurveyId)
+                .HasConstraintName("trx_survey_element_trx_survey_id_fkey");
+
+            entity.HasOne(d => d.MasterQuestionerDetail)
+                .WithMany(p => p.TrxSurveyElements)
+                .HasForeignKey(d => d.MasterQuestionerDetailId)
+                .HasConstraintName("trx_survey_element_master_questioner_detail_id_fkey");
+        });
+
+        modelBuilder.Entity<TrxFeedback>(entity =>
+        {
+            entity.ToTable("trx_feedback");
+
+            entity.HasKey(e => e.Id).HasName("trx_feedback_pkey");
+
+            entity.Property(e => e.Id).HasMaxLength(50).HasColumnName("id").HasDefaultValueSql("uuid_generate_v4()");
+            entity.Property(e => e.TicketNo).HasMaxLength(50).HasColumnName("ticket_no");
+            entity.Property(e => e.AppUserId).HasMaxLength(50).HasColumnName("app_user_id");
+            entity.Property(e => e.TrxAuditId).HasMaxLength(50).HasColumnName("trx_audit_id");
+            entity.Property(e => e.FeedbackType).HasMaxLength(50).HasColumnName("feedback_type");
+            entity.Property(e => e.Status).HasMaxLength(100).HasColumnName("status");
+            entity.Property(e => e.CreatedBy).HasMaxLength(50).HasColumnName("created_by");
+            entity.Property(e => e.CreatedDate).HasColumnType("timestamp(3)").HasDefaultValueSql("CURRENT_TIMESTAMP").HasColumnName("created_date");
+            entity.Property(e => e.UpdatedBy).HasMaxLength(50).HasColumnName("updated_by");
+            entity.Property(e => e.UpdatedDate).HasColumnType("timestamp").HasColumnName("updated_date");
+            entity.Property(e => e.ApprovalBy).HasMaxLength(50).HasColumnName("approval_by");
+            entity.Property(e => e.ApprovalDate).HasColumnType("timestamp").HasColumnName("approval_date");
+
+            entity.HasOne(d => d.AppUser)
+                .WithMany(p => p.TrxFeedbacks)
+                .HasForeignKey(d => d.AppUserId)
+                .HasConstraintName("trx_feedback_app_user_id_fkey");
+
+            entity.HasOne(d => d.TrxAudit)
+                .WithMany(p => p.TrxFeedbacks)
+                .HasForeignKey(d => d.TrxAuditId)
+                .HasConstraintName("trx_feedback_trx_audit_id_fkey");
+        });
+
+        modelBuilder.Entity<TrxFeedbackPoint>(entity =>
+        {
+            entity.ToTable("trx_feedback_point");
+
+            entity.HasKey(e => e.Id).HasName("trx_feedback_point_pkey");
+
+            entity.Property(e => e.Id).HasMaxLength(50).HasColumnName("id").HasDefaultValueSql("uuid_generate_v4()");
+            entity.Property(e => e.TrxFeedbackId).HasMaxLength(50).HasColumnName("trx_feedback_id");
+            entity.Property(e => e.Description).HasColumnName("description");
+            entity.Property(e => e.ElementMasterQuestionerDetailId).HasMaxLength(50).HasColumnName("element_master_questioner_detail_id");
+            entity.Property(e => e.SubElementMasterQuestionerDetailId).HasMaxLength(50).HasColumnName("sub_element_master_questioner_detail_id");
+            entity.Property(e => e.DetailElementMasterQuestionerDetailId).HasMaxLength(50).HasColumnName("detail_element_master_questioner_detail_id");
+            entity.Property(e => e.MediaUpload).HasColumnName("media_upload");
+            entity.Property(e => e.MediaTotal).HasColumnName("media_total");
+            entity.Property(e => e.Status).HasMaxLength(100).HasColumnName("status");
+            entity.Property(e => e.CreatedBy).HasMaxLength(50).HasColumnName("created_by");
+            entity.Property(e => e.CreatedDate).HasColumnType("timestamp(3)").HasDefaultValueSql("CURRENT_TIMESTAMP").HasColumnName("created_date");
+            entity.Property(e => e.UpdatedBy).HasMaxLength(50).HasColumnName("updated_by");
+            entity.Property(e => e.UpdatedDate).HasColumnType("timestamp").HasColumnName("updated_date");
+
+            entity.HasOne(d => d.TrxFeedback)
+                .WithMany(p => p.TrxFeedbackPoints)
+                .HasForeignKey(d => d.TrxFeedbackId)
+                .HasConstraintName("trx_feedback_point_trx_feedback_id_fkey");
+        });
+
+        modelBuilder.Entity<TrxFeedbackPointElement>(entity =>
+        {
+            entity.ToTable("trx_feedback_point_element");
+
+            entity.HasKey(e => e.Id).HasName("trx_feedback_point_element_pkey");
+
+            entity.Property(e => e.Id).HasMaxLength(50).HasColumnName("id").HasDefaultValueSql("uuid_generate_v4()");
+            entity.Property(e => e.TrxFeedbackPointId).HasMaxLength(50).HasColumnName("trx_feedback_point_id");
+            entity.Property(e => e.MasterQuestionerDetailId).HasMaxLength(50).HasColumnName("master_questioner_detail_id");
+            entity.Property(e => e.Status).HasMaxLength(100).HasColumnName("status");
+            entity.Property(e => e.CreatedBy).HasMaxLength(50).HasColumnName("created_by");
+            entity.Property(e => e.CreatedDate).HasColumnType("timestamp(3)").HasDefaultValueSql("CURRENT_TIMESTAMP").HasColumnName("created_date");
+            entity.Property(e => e.UpdatedBy).HasMaxLength(50).HasColumnName("updated_by");
+            entity.Property(e => e.UpdatedDate).HasColumnType("timestamp").HasColumnName("updated_date");
+
+            entity.HasOne(d => d.TrxFeedbackPoint)
+                .WithMany(p => p.TrxFeedbackPointElements)
+                .HasForeignKey(d => d.TrxFeedbackPointId)
+                .HasConstraintName("trx_feedback_point_element_trx_feedback_point_id_fkey");
+            
+            entity.HasOne(d => d.MasterQuestionerDetail)
+                .WithMany(p => p.TrxFeedbackPointElements)
+                .HasForeignKey(d => d.TrxFeedbackPointId)
+                .HasConstraintName("trx_feedback_point_element_master_questioner_detail_id_fkey");
+        });
+
+        modelBuilder.Entity<Notification>(entity =>
+        {
+            entity.ToTable("notification");
+
+            entity.HasKey(e => e.Id).HasName("notification_pkey");
+
+            entity.Property(e => e.Id)
+                .HasMaxLength(50)
+                .HasColumnName("id")
+                .HasDefaultValueSql("uuid_generate_v4()");
+
+            entity.Property(e => e.AppUserId)
+                .HasMaxLength(50)
+                .HasColumnName("app_user_id");
+
+            entity.Property(e => e.Title)
+                .HasColumnName("title");
+
+            entity.Property(e => e.Message)
+                .HasColumnName("message");
+
+            entity.Property(e => e.Status)
+                .HasMaxLength(100)
+                .HasColumnName("status");
+
+            entity.Property(e => e.CreatedBy)
+                .HasMaxLength(50)
+                .HasColumnName("created_by");
+
+            entity.Property(e => e.CreatedDate)
+                .HasColumnType("timestamp(3)")
+                .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                .HasColumnName("created_date");
+
+            entity.Property(e => e.UpdatedBy)
+                .HasMaxLength(50)
+                .HasColumnName("updated_by");
+
+            entity.Property(e => e.UpdatedDate)
+                .HasColumnType("timestamp")
+                .HasColumnName("updated_date");
+
+            entity.HasOne<AppUser>(d => d.AppUser)
+                .WithMany(p => p.Notifications)
+                .HasForeignKey(d => d.AppUserId)
+                .HasConstraintName("notification_app_user_id_fkey");
         });
 
         OnModelCreatingPartial(modelBuilder);

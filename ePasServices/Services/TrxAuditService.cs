@@ -120,7 +120,11 @@ public class TrxAuditService : ITrxAuditService
                 ta.audit_type AS AuditType,
                 ta.audit_schedule_date AS AuditScheduleDate,
                 ta.status AS Status,
-                au.name AS AuditorName
+                au.name AS AuditorName,
+                CASE 
+                    WHEN ta.good_status = 'CERTIFIED' OR ta.excellent_status = 'CERTIFIED' THEN 'PASSED'
+                    ELSE 'FAILED'
+                END AS ResultStatus
             FROM trx_audit ta
             JOIN app_user au ON ta.app_user_id = au.id
             JOIN app_user_role aur ON ta.spbu_id = aur.spbu_id
@@ -187,7 +191,25 @@ public class TrxAuditService : ITrxAuditService
             ta.audit_type AS AuditType,
             ta.audit_schedule_date AS AuditScheduleDate,
             ta.status AS Status,
-            au.name AS AuditorName
+            au.name AS AuditorName,
+            ta.good_status AS GoodStatus,
+            ta.excellent_status AS ExcellentStatus,
+            ta.score AS Score,
+            CASE 
+                WHEN ta.report_file_good IS NOT NULL 
+                THEN CONCAT('https://epas-assets.zarata.co.id//uploads/reports/', ta.report_file_good)
+                ELSE NULL
+            END AS ReportFileGood,
+            CASE 
+                WHEN ta.report_file_excellent IS NOT NULL 
+                THEN CONCAT('https://epas-assets.zarata.co.id//uploads/reports/', ta.report_file_excellent)
+                ELSE NULL
+            END AS ReportFileExcellent,
+            CASE 
+                WHEN ta.report_file_boa IS NOT NULL 
+                THEN CONCAT('https://epas-assets.zarata.co.id//uploads/reports/', ta.report_file_boa)
+                ELSE NULL
+            END AS ReportFileBoa
         FROM trx_audit ta
         JOIN app_user au ON ta.app_user_id = au.id
         JOIN app_user_role aur ON ta.spbu_id = aur.spbu_id
@@ -327,16 +349,44 @@ public class TrxAuditService : ITrxAuditService
             : (false, "Gagal cancel audit");
     }
 
-    public async Task<List<TrxAuditDetailListResponse>> GetDetailsByTrxAuditIdAsync(string trxAuditId)
+    public async Task<List<TrxAuditDetailListResponse>> GetDetailsByTrxAuditIdAndParentIdAsync(string trxAuditId, string parentId)
     {
-        const string sql = @"
-            SELECT mqd.id, mqd.number, mqd.title
-            FROM trx_audit_checklist tac
-            INNER JOIN master_questioner_detail mqd ON mqd.id = tac.master_questioner_detail_id
-            WHERE tac.trx_audit_id = @trxAuditId
-            ORDER BY mqd.number";
+        string sql;
+        object parameters;
 
-        var result = await _conn.QueryAsync<TrxAuditDetailListResponse>(sql, new { trxAuditId });
+        if (parentId == "0")
+        {
+            sql = @"
+                SELECT mqd.id, mqd.number, mqd.title, mqd.description, mqd.order_no as orderNo, mqd.type, 
+                    NULL AS trx_audit_checklist_id
+                FROM trx_audit ta
+                INNER JOIN master_questioner_detail mqd 
+                    ON mqd.master_questioner_id = ta.master_questioner_checklist_id
+                WHERE ta.id = @TrxAuditId
+                AND mqd.parent_id IS NULL
+                ORDER BY mqd.number ASC";
+
+            parameters = new { TrxAuditId = trxAuditId };
+        }
+        else
+        {
+            sql = @"
+                SELECT mqd.id, mqd.number, mqd.title, mqd.description, mqd.order_no as orderNo, mqd.type, 
+                    tac.id AS trx_audit_checklist_id
+                FROM trx_audit ta
+                INNER JOIN master_questioner_detail mqd 
+                    ON mqd.master_questioner_id = ta.master_questioner_checklist_id
+                LEFT JOIN trx_audit_checklist tac 
+                    ON tac.trx_audit_id = ta.id 
+                AND tac.master_questioner_detail_id = mqd.id
+                WHERE ta.id = @TrxAuditId
+                AND mqd.parent_id = @ParentId
+                ORDER BY mqd.number ASC";
+
+            parameters = new { TrxAuditId = trxAuditId, ParentId = parentId };
+        }
+
+        var result = await _conn.QueryAsync<TrxAuditDetailListResponse>(sql, parameters);
         return [.. result];
     }
 }

@@ -8,5 +8,6 @@
         public DateTime? AuditScheduleDate { get; set; }
         public string Status { get; set; }
         public string AuditorName { get; set; }
+        public string ResultStatus { get; set; }
     }
 }

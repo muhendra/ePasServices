@@ -1,7 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Text;
-using ePasServices.ViewModels;
 
 [ApiController]
 [Route("v1")]
