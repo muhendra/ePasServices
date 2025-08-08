@@ -19,5 +19,5 @@ public partial class TrxFeedbackPoint
     public virtual TrxFeedback TrxFeedback { get; set; } = null!;
     public virtual MasterQuestionerDetail? ElementMasterQuestionerDetail { get; set; }
     public virtual ICollection<TrxFeedbackPointElement> TrxFeedbackPointElements { get; set; } = new List<TrxFeedbackPointElement>();
-    public virtual ICollection<TrxFeedbackPointMedia> TrxFeedbackPointMedia { get; set; } = new List<TrxFeedbackPointMedia>();
+    public virtual ICollection<TrxFeedbackPointMedia> TrxFeedbackPointMedias { get; set; } = new List<TrxFeedbackPointMedia>();
 }
