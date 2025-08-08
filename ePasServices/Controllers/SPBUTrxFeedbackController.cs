@@ -183,7 +183,7 @@ namespace ePasServices.Controllers
                 Id = Guid.NewGuid().ToString(),
                 TrxFeedbackPointId = feedbackPointId,
                 MediaType = mediaType,
-                MediaPath = $"/uploads/{feedbackPointId}/{fileName}",
+                MediaPath = $"/uploads/feedback/{feedbackPointId}/{fileName}",
                 Status = "ACTIVE",
                 CreatedBy = username,
                 CreatedDate = DateTime.UtcNow.ToLocalTime(),
