@@ -877,6 +877,55 @@ public partial class PostgreDbContext : DbContext
                 .HasConstraintName("trx_feedback_point_element_master_questioner_detail_id_fkey");
         });
 
+        modelBuilder.Entity<TrxFeedbackPointMedia>(entity =>
+        {
+            entity.ToTable("trx_feedback_point_media");
+
+            entity.HasKey(e => e.Id).HasName("trx_feedback_point_media_pkey");
+
+            entity.Property(e => e.Id)
+                .HasMaxLength(50)
+                .HasColumnName("id")
+                .HasDefaultValueSql("uuid_generate_v4()");
+
+            entity.Property(e => e.TrxFeedbackPointId)
+                .HasMaxLength(50)
+                .HasColumnName("trx_feedback_point_id");
+
+            entity.Property(e => e.MediaType)
+                .HasMaxLength(100)
+                .HasColumnName("media_type");
+
+            entity.Property(e => e.MediaPath)
+                .HasColumnName("media_path");
+
+            entity.Property(e => e.Status)
+                .HasMaxLength(100)
+                .HasColumnName("status");
+
+            entity.Property(e => e.CreatedBy)
+                .HasMaxLength(50)
+                .HasColumnName("created_by");
+
+            entity.Property(e => e.CreatedDate)
+                .HasColumnType("timestamp(3)")
+                .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                .HasColumnName("created_date");
+
+            entity.Property(e => e.UpdatedBy)
+                .HasMaxLength(50)
+                .HasColumnName("updated_by");
+
+            entity.Property(e => e.UpdatedDate)
+                .HasColumnType("timestamp")
+                .HasColumnName("updated_date");
+
+            entity.HasOne(d => d.TrxFeedbackPoint)
+                .WithMany(p => p.TrxFeedbackPointMedias)
+                .HasForeignKey(d => d.TrxFeedbackPointId)
+                .HasConstraintName("trx_feedback_point_media_trx_feedback_point_id_fkey");
+        });
+
         modelBuilder.Entity<Notification>(entity =>
         {
             entity.ToTable("notification");
