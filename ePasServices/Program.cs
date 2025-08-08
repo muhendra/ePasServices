@@ -27,6 +27,8 @@ builder.Services.AddScoped<IAppUserService, AppUserService>();
 builder.Services.AddScoped<IMasterQuestionerService, MasterQuestionerService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<ITrxAuditService, TrxAuditService>();
+builder.Services.AddScoped<ITrxFeedbackService, TrxFeedbackService>();
+builder.Services.AddScoped<INotificationService, NotificationService>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();

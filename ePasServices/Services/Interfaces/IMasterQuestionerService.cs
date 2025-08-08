@@ -7,7 +7,6 @@ namespace ePasServices.Services.Interfaces
         Task<MasterQuestionerResponse?> GetMasterQuestionerByUserAsync(string id, string username);
         Task<MasterQuestionerResponse?> GetMasterQuestionerMysteryByUserAsync(string id, string username);
         Task<MasterQuestionerDetailCombinedViewModel?> GetQuestionerDetailFromTrxAuditAsync(string trxAuditId);
-
         Task<MasterQuestionerSurveyResponse?> GetLatestSurveyWithDetailsAsync();
     }
 

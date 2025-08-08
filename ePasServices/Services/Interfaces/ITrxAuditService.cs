@@ -15,7 +15,7 @@ namespace ePasServices.Services.Interfaces
 
         Task<int> CountInProgressAsync(string username);
 
-        Task<List<TrxAuditDetailListResponse>> GetDetailsByTrxAuditIdAsync(string trxAuditId);
+        Task<List<TrxAuditDetailListResponse>> GetDetailsByTrxAuditIdAndParentIdAsync(string trxAuditId, string parentId);
         
     }
 }

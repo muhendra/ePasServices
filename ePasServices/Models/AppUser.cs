@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace ePasServices.Models;
+﻿namespace ePasServices.Models;
 
 public partial class AppUser
 {
@@ -38,4 +35,10 @@ public partial class AppUser
     public virtual ICollection<AppUserRole> AppUserRoles { get; set; } = new List<AppUserRole>();
 
     public virtual ICollection<TrxAudit> TrxAudits { get; set; } = new List<TrxAudit>();
+
+    public virtual ICollection<TrxSurvey> TrxSurveys { get; set; } = new List<TrxSurvey>();
+
+    public virtual ICollection<TrxFeedback> TrxFeedbacks { get; set; } = new List<TrxFeedback>();
+
+    public virtual ICollection<Notification> Notifications { get; set; } = new List<Notification>();
 }

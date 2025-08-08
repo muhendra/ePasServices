@@ -2,11 +2,10 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-
 namespace ePasServices.Controllers
 {
     [ApiController]
-    [Route("v1/spbu")]
+    [Route("v1/spbu/trx-audit")]
     public class SPBUTrxAuditController : ControllerBase
     {
         private readonly ITrxAuditService _auditService;
@@ -16,7 +15,7 @@ namespace ePasServices.Controllers
             _auditService = auditService;
         }
 
-        [HttpGet("trx-audit")]
+        [HttpGet]
         [Authorize]
         public async Task<IActionResult> GetTrxAudit(
             [FromQuery] int page = 1,
@@ -42,7 +41,7 @@ namespace ePasServices.Controllers
             });
         }
 
-        [HttpGet("trx-audit/{id}")]
+        [HttpGet("{id}")]
         [Authorize]
         public async Task<IActionResult> GetTrxAuditDetail(string id)
         {
@@ -62,14 +61,14 @@ namespace ePasServices.Controllers
             });
         }
 
-        [HttpGet("trx-audit/detail-list/trx-audit-id/{trxAuditId}")]
+        [HttpGet("detail-list/trx-audit-id/{trxAuditId}/parent-id/{parentId}")]
         [Authorize]
-        public async Task<IActionResult> GetTrxAuditDetailList(string trxAuditId)
+        public async Task<IActionResult> GetTrxAuditDetailList(string trxAuditId, string parentId)
         {
             if (!IsAuthorized(out _))
                 return Unauthorized(new ApiResponse("Unauthorized", "Token invalid"));
 
-            var result = await _auditService.GetDetailsByTrxAuditIdAsync(trxAuditId);
+            var result = await _auditService.GetDetailsByTrxAuditIdAndParentIdAsync(trxAuditId, parentId);
 
             return Ok(new
             {

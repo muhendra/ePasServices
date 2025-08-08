@@ -8,11 +8,11 @@
 
     public class SpbuInfo
     {
-        public string spbu_no { get; set; }
-        public string province_name { get; set; }
-        public string city_name { get; set; }
-        public string type { get; set; }
-        public string level { get; set; }
+        public string SpbuNo { get; set; }
+        public string ProvinceName { get; set; }
+        public string CityName { get; set; }
+        public string Type { get; set; }
+        public string Level { get; set; }
 
     }
 
@@ -20,11 +20,11 @@
     {
         public string Name { get; set; }
         public string App { get; set; }
-        public string spbu_no { get; set; }
-        public string province_name { get; set; }
-        public string city_name { get; set; }
-        public string type { get; set; }
-        public string level { get; set; }
+        public string SpbuNo { get; set; }
+        public string ProvinceName { get; set; }
+        public string CityName { get; set; }
+        public string Type { get; set; }
+        public string Level { get; set; }
     }
 
 
