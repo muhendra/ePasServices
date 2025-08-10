@@ -703,6 +703,10 @@ public partial class PostgreDbContext : DbContext
             entity.Property(e => e.AppUserId)
                 .HasMaxLength(50)
                 .HasColumnName("app_user_id");
+            
+            entity.Property(e => e.TrxAuditId)
+                .HasMaxLength(50)
+                .HasColumnName("trx_audit_id");
 
             entity.Property(e => e.MasterQuestionerId)
                 .HasMaxLength(50)
@@ -733,6 +737,11 @@ public partial class PostgreDbContext : DbContext
                 .WithMany(p => p.TrxSurveys)
                 .HasForeignKey(d => d.AppUserId)
                 .HasConstraintName("trx_survey_app_user_id_fkey");
+
+            entity.HasOne(d => d.TrxAudit)
+                .WithMany(p => p.TrxSurveys)
+                .HasForeignKey(d => d.TrxAuditId)
+                .HasConstraintName("trx_survey_trx_audit_id_fkey");
 
             entity.HasOne(d => d.MasterQuestioner)
                 .WithMany(p => p.TrxSurveys)

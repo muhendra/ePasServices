@@ -68,6 +68,7 @@ namespace ePasServices.Controllers
             {
                 Id = Guid.NewGuid().ToString(),
                 AppUserId = user.Id,
+                TrxAuditId = request.TrxAuditId,
                 MasterQuestionerId = request.MasterQuestionerId,
                 Status = "ACTIVE",
                 CreatedBy = username,
@@ -110,9 +111,9 @@ namespace ePasServices.Controllers
             }
         }
 
-        [HttpGet("count")]
+        [HttpGet("count/trx-audit-id/{trxAuditId}")]
         [Authorize]
-        public async Task<IActionResult> GetSurveyCountAsync()
+        public async Task<IActionResult> GetSurveyCountAsync(string trxAuditId)
         {
             var username = User.FindFirst("username")?.Value;
             if (string.IsNullOrEmpty(username))
@@ -129,8 +130,16 @@ namespace ePasServices.Controllers
                 return NotFound(new ApiResponse("Error", "User tidak ditemukan atau tidak aktif"));
             }
 
+            var trxAudit = await _context.TrxAudits
+                .FirstOrDefaultAsync(x => x.Id == trxAuditId);
+            if (trxAudit == null)
+            {
+                _logger.LogWarning("TrxAudit not found: {TrxAuditId}", trxAuditId);
+                return NotFound(new ApiResponse("Error", "TrxAudit tidak ditemukan"));
+            }
+
             var count = await _context.TrxSurveys
-                .CountAsync(x => x.AppUserId == user.Id);
+                .CountAsync(x => x.AppUserId == user.Id && x.TrxAuditId == trxAuditId);
 
             return Ok(new
             {

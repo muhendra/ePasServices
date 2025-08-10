@@ -59,5 +59,7 @@ public partial class TrxAudit
 
     public virtual ICollection<TrxAuditQq> TrxAuditQqs { get; set; } = new List<TrxAuditQq>();
 
+    public virtual ICollection<TrxSurvey> TrxSurveys { get; set; } = new List<TrxSurvey>();
+
     public virtual ICollection<TrxFeedback> TrxFeedbacks { get; set; } = new List<TrxFeedback>();
 }
