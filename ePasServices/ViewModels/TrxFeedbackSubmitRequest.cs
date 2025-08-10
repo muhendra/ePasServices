@@ -9,7 +9,7 @@ public class FeedbackPoint
 {
     public string Id { get; set; }
     public string FeedbackDescription { get; set; }
-    public string ElementMasterQuestionerDetailId { get; set; }
+    public string? ElementMasterQuestionerDetailId { get; set; }
     public string? SubElementMasterQuestionerDetailId { get; set; }
     public string? DetailElementMasterQuestionerDetailId { get; set; }
     public int FeedbackMediaTotal { get; set; }
