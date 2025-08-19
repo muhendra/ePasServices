@@ -64,7 +64,7 @@ public class TrxFeedbackService : ITrxFeedbackService
             LEFT JOIN master_questioner_detail mqd 
                 ON mqd.id = tfpe.master_questioner_detail_id
             WHERE au.username = @username and tf.trx_audit_id = @trxAuditId and tf.feedback_type = @feedbackType
-            GROUP BY tf.id, tf.ticket_no, tf.feedback_type, tf.status, tf.created_date
+            GROUP BY tf.id, tf.ticket_no, tf.feedback_type, tfp.description, tf.status, tf.created_date
             ORDER BY tf.created_date DESC
             LIMIT @limit OFFSET @offset;
         ";
