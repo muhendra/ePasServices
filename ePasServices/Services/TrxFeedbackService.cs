@@ -50,6 +50,7 @@ public class TrxFeedbackService : ITrxFeedbackService
                 tf.id,
                 tf.ticket_no AS TicketNo,
                 tf.feedback_type AS FeedbackType,
+                tfp.description AS Description,
                 tf.status AS Status,
                 tf.created_date AS CreatedDate,
                 STRING_AGG(mqd.number::text, ', ') AS Numbers

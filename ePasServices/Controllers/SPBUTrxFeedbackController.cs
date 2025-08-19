@@ -105,7 +105,7 @@ namespace ePasServices.Controllers
                 AppUserId = user.Id,
                 TrxAuditId = request.TrxAuditId,
                 FeedbackType = request.FeedbackType,
-                Status = "IN_PROGRESS_SUBMIT",
+                Status = request.FeedbackType == "COMPLAINT" ? "APPROVE" : "IN_PROGRESS_SUBMIT",
                 CreatedBy = username,
                 CreatedDate = DateTime.UtcNow.ToLocalTime(),
                 UpdatedBy = username,
