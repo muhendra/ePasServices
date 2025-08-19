@@ -11,6 +11,7 @@
         public string SpbuNo { get; set; }
         public string ProvinceName { get; set; }
         public string CityName { get; set; }
+        public string Address { get; set; }
         public string Type { get; set; }
         public string Level { get; set; }
 
@@ -23,6 +24,7 @@
         public string SpbuNo { get; set; }
         public string ProvinceName { get; set; }
         public string CityName { get; set; }
+        public string Address { get; set; }
         public string Type { get; set; }
         public string Level { get; set; }
     }

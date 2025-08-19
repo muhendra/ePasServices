@@ -38,8 +38,11 @@ public class TrxFeedbackService : ITrxFeedbackService
         int page, 
         int limit, 
         string username, 
-        string trxAuditId)
+        string trxAuditId, 
+        string feedbackType)
     {
+        feedbackType = feedbackType.ToUpperInvariant();
+        
         var offset = (page - 1) * limit;
 
         const string sql = @"
@@ -51,15 +54,15 @@ public class TrxFeedbackService : ITrxFeedbackService
                 tf.created_date AS CreatedDate,
                 STRING_AGG(mqd.number::text, ', ') AS Numbers
             FROM trx_feedback tf
-            INNER JOIN trx_feedback_point tfp 
-                ON tfp.trx_feedback_id = tf.id
-            INNER JOIN trx_feedback_point_element tfpe 
-                ON tfpe.trx_feedback_point_id = tfp.id
-            INNER JOIN master_questioner_detail mqd 
-                ON mqd.id = tfpe.master_questioner_detail_id
             INNER JOIN app_user au 
                 ON au.id = tf.app_user_id
-            WHERE au.username = @username and tf.trx_audit_id = @trxAuditId
+            INNER JOIN trx_feedback_point tfp 
+                ON tfp.trx_feedback_id = tf.id
+            LEFT JOIN trx_feedback_point_element tfpe 
+                ON tfpe.trx_feedback_point_id = tfp.id
+            LEFT JOIN master_questioner_detail mqd 
+                ON mqd.id = tfpe.master_questioner_detail_id
+            WHERE au.username = @username and tf.trx_audit_id = @trxAuditId and tf.feedback_type = @feedbackType
             GROUP BY tf.id, tf.ticket_no, tf.feedback_type, tf.status, tf.created_date
             ORDER BY tf.created_date DESC
             LIMIT @limit OFFSET @offset;
@@ -68,23 +71,23 @@ public class TrxFeedbackService : ITrxFeedbackService
         const string countSql = @"
             SELECT COUNT(DISTINCT tf.id)
             FROM trx_feedback tf
-            INNER JOIN trx_feedback_point tfp 
-                ON tfp.trx_feedback_id = tf.id
-            INNER JOIN trx_feedback_point_element tfpe 
-                ON tfpe.trx_feedback_point_id = tfp.id
-            INNER JOIN master_questioner_detail mqd 
-                ON mqd.id = tfpe.master_questioner_detail_id
             INNER JOIN app_user au 
                 ON au.id = tf.app_user_id
-            WHERE au.username = @username and tf.trx_audit_id = @trxAuditId;
+            INNER JOIN trx_feedback_point tfp 
+                ON tfp.trx_feedback_id = tf.id
+            LEFT JOIN trx_feedback_point_element tfpe 
+                ON tfpe.trx_feedback_point_id = tfp.id
+            LEFT JOIN master_questioner_detail mqd 
+                ON mqd.id = tfpe.master_questioner_detail_id
+            WHERE au.username = @username and tf.trx_audit_id = @trxAuditId and tf.feedback_type = @feedbackType;
         ";
 
         var items = (await _conn.QueryAsync<TrxFeedbackListItemViewModel>(
             sql,
-            new { limit, offset, username, trxAuditId}
+            new { limit, offset, username, trxAuditId, feedbackType}
         )).ToList();
 
-        var total = await _conn.ExecuteScalarAsync<int>(countSql, new { username, trxAuditId});
+        var total = await _conn.ExecuteScalarAsync<int>(countSql, new { username, trxAuditId, feedbackType});
 
         return (items, total);
     }

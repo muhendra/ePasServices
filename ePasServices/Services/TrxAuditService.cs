@@ -119,6 +119,7 @@ public class TrxAuditService : ITrxAuditService
                 ta.audit_level AS AuditLevel,
                 ta.audit_type AS AuditType,
                 ta.audit_schedule_date AS AuditScheduleDate,
+                ta.audit_execution_time AS AuditExecutionTime,
                 ta.status AS Status,
                 au.name AS AuditorName,
                 CASE 
@@ -151,6 +152,7 @@ public class TrxAuditService : ITrxAuditService
                 ta.audit_level AS AuditLevel,
                 ta.audit_type AS AuditType,
                 ta.audit_schedule_date AS AuditScheduleDate,
+                ta.audit_execution_time AS AuditExecutionTime,
                 ta.status AS Status,
                 au.name AS AuditorName
             FROM trx_audit ta
@@ -190,6 +192,7 @@ public class TrxAuditService : ITrxAuditService
             ta.audit_level AS AuditLevel,
             ta.audit_type AS AuditType,
             ta.audit_schedule_date AS AuditScheduleDate,
+            ta.audit_execution_time AS AuditExecutionTime,
             ta.status AS Status,
             au.name AS AuditorName,
             ta.good_status AS GoodStatus,

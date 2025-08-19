@@ -90,6 +90,7 @@ public class AppUserService : IAppUserService
             s.spbu_no as SpbuNo,
             s.province_name as ProvinceName,
             s.city_name as CityName,
+            s.address as Address,
             s.""type"",
             s.""level"" 
         FROM app_user au
@@ -112,6 +113,7 @@ public class AppUserService : IAppUserService
                     SpbuNo = result.SpbuNo,
                     ProvinceName = result.ProvinceName,
                     CityName = result.CityName,
+                    Address = result.Address,
                     Type = result.Type,
                     Level = result.Level
                 }

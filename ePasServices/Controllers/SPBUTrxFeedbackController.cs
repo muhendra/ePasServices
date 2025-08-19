@@ -26,6 +26,48 @@ namespace ePasServices.Controllers
             _feedbackService = feedbackService;
         }
 
+        [HttpGet("count/trx-audit-id/{trxAuditId}/{feedbackType}")]
+        [Authorize]
+        public async Task<IActionResult> GetFeedbackCountAsync(string trxAuditId, string feedbackType)
+        {
+            var username = User.FindFirst("username")?.Value;
+            if (string.IsNullOrEmpty(username))
+            {
+                _logger.LogWarning("Token invalid: username not found in claims");
+                return Unauthorized(new ApiResponse("Unauthorized", "Token invalid"));
+            }
+
+            var user = await _context.AppUsers
+                .FirstOrDefaultAsync(x => x.Username == username && x.Status == "ACTIVE");
+            if (user == null)
+            {
+                _logger.LogWarning("User not found or not active: {Username}", username);
+                return NotFound(new ApiResponse("Error", "User tidak ditemukan atau tidak aktif"));
+            }
+
+            var trxAudit = await _context.TrxAudits
+                .FirstOrDefaultAsync(x => x.Id == trxAuditId);
+            if (trxAudit == null)
+            {
+                _logger.LogWarning("TrxAudit not found: {TrxAuditId}", trxAuditId);
+                return NotFound(new ApiResponse("Error", "TrxAudit tidak ditemukan"));
+            }
+
+            // normalize input, only allow certain feedback types
+            var allowedTypes = new[] { "COMPLAINT", "BANDING" };
+            if (!allowedTypes.Contains(feedbackType.ToUpper()))
+            {
+                return BadRequest(new ApiResponse("Error", $"Invalid feedback type: {feedbackType}"));
+            }
+
+            var count = await _context.TrxFeedbacks
+                .CountAsync(x => x.AppUserId == user.Id 
+                            && x.TrxAuditId == trxAuditId 
+                            && x.FeedbackType == feedbackType.ToUpper());
+
+            return Ok(new { Count = count });
+        }
+
         [HttpPost("data-submit")]
         [Authorize]
         public async Task<IActionResult> SubmitFeedbackDataAsync([FromBody] TrxFeedbackSubmitRequest request)
@@ -248,13 +290,14 @@ namespace ePasServices.Controllers
         public async Task<IActionResult> GetTrxFeedback(
             [FromRoute] string trxAuditId, 
             [FromQuery] int page = 1, 
-            [FromQuery] int limit = 10)
+            [FromQuery] int limit = 10,
+            [FromQuery] string feedbackType = "")
         {
             var username = User.FindFirst("username")?.Value;
             if (string.IsNullOrEmpty(username))
                 return Unauthorized(new ApiResponse("Unauthorized", "Token invalid"));
 
-            var (data, total) = await _feedbackService.GetTrxFeedbackListAsync(page, limit, username, trxAuditId);
+            var (data, total) = await _feedbackService.GetTrxFeedbackListAsync(page, limit, username, trxAuditId, feedbackType);
 
             if (data == null || !data.Any())
                 return NotFound(new ApiResponse("Not Found", "Data tidak ditemukan"));
