@@ -39,7 +39,16 @@ public class TrxAuditService : ITrxAuditService
                 ARRAY(
                     SELECT filepath FROM spbu_image si
                     WHERE si.spbu_id = s.id
-                ) AS Images
+                ) AS Images,
+                CASE
+                    WHEN EXISTS (
+                        SELECT 1
+                        FROM trx_feedback tf
+                        inner join trx_audit txa on txa.id = tf.trx_audit_id
+                        WHERE txa.spbu_id = ta.spbu_id and tf.feedback_type = 'BANDING' and tf.status not in ('APPROVE','REJECT','CLOSED')
+                    ) THEN TRUE
+                    ELSE FALSE
+                END AS HasProgressBanding
             FROM trx_audit ta
             INNER JOIN spbu s ON s.id = ta.spbu_id
             INNER JOIN app_user au ON ta.app_user_id = au.id
@@ -71,7 +80,16 @@ public class TrxAuditService : ITrxAuditService
                 ARRAY(
                     SELECT filepath FROM spbu_image si
                     WHERE si.spbu_id = s.id
-                ) AS Images
+                ) AS Images,
+                CASE
+                    WHEN EXISTS (
+                        SELECT 1
+                        FROM trx_feedback tf
+                        inner join trx_audit txa on txa.id = tf.trx_audit_id
+                        WHERE txa.spbu_id = ta.spbu_id and tf.feedback_type = 'BANDING' and tf.status not in ('APPROVE','REJECT','CLOSED')
+                    ) THEN TRUE
+                    ELSE FALSE
+                END AS HasProgressBanding
             FROM trx_audit ta
             INNER JOIN spbu s ON s.id = ta.spbu_id
             INNER JOIN app_user au ON ta.app_user_id = au.id

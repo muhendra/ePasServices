@@ -27,6 +27,7 @@
         public double? Latitude { get; set; }
         public double? Longitude { get; set; }
         public string[] Images { get; set; } = Array.Empty<string>();
+        public bool HasProgressBanding { get; set; }
     }
 
 }
