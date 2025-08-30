@@ -54,6 +54,8 @@ public partial class PostgreDbContext : DbContext
 
     public virtual DbSet<Notification> Notifications { get; set; }
 
+    public virtual DbSet<SysParameter> SysParameters { get; set; }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
         => optionsBuilder.UseNpgsql("Host=34.128.100.28;Port=5432;Database=epas;Username=epas_pertamina;Password=Ep4sU$2025ApR@_Ps$w0rd_P3rtM1N4@0k2025Apr");
@@ -504,6 +506,13 @@ public partial class PostgreDbContext : DbContext
                 .HasDefaultValueSql("CURRENT_TIMESTAMP")
                 .HasColumnType("timestamp without time zone")
                 .HasColumnName("updated_date");
+            entity.Property(e => e.ApprovalBy)
+                .HasMaxLength(50)
+                .HasColumnName("approval_by");
+            entity.Property(e => e.ApprovalDate)
+                .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("approval_date");
 
             entity.HasOne(d => d.AppUser).WithMany(p => p.TrxAudits)
                 .HasForeignKey(d => d.AppUserId)
@@ -982,6 +991,58 @@ public partial class PostgreDbContext : DbContext
                 .HasForeignKey(d => d.AppUserId)
                 .HasConstraintName("notification_app_user_id_fkey");
         });
+
+        modelBuilder.Entity<SysParameter>(entity =>
+        {
+            entity.ToTable("sys_parameter");
+
+            entity.HasKey(e => e.Id).HasName("sys_parameter_pkey");
+
+            entity.HasIndex(e => e.Code)
+                .IsUnique()
+                .HasDatabaseName("sys_parameter_code_uk");
+
+            entity.Property(e => e.Id)
+                .HasMaxLength(50)
+                .HasColumnName("id")
+                .HasDefaultValueSql("uuid_generate_v4()");
+
+            entity.Property(e => e.Code)
+                .HasMaxLength(255)
+                .IsRequired()
+                .HasColumnName("code");
+
+            entity.Property(e => e.Value)
+                .HasMaxLength(255)
+                .IsRequired()
+                .HasColumnName("value");
+
+            entity.Property(e => e.Status)
+                .HasMaxLength(100)
+                .IsRequired()
+                .HasColumnName("status");
+
+            entity.Property(e => e.CreatedBy)
+                .HasMaxLength(50)
+                .IsRequired()
+                .HasColumnName("created_by");
+
+            entity.Property(e => e.CreatedDate)
+                .HasColumnType("timestamp(3)")
+                .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                .IsRequired()
+                .HasColumnName("created_date");
+
+            entity.Property(e => e.UpdatedBy)
+                .HasMaxLength(50)
+                .HasColumnName("updated_by");
+
+            entity.Property(e => e.UpdatedDate)
+                .HasColumnType("timestamp")
+                .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                .HasColumnName("updated_date");
+        });
+
 
         OnModelCreatingPartial(modelBuilder);
     }
