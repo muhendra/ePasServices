@@ -9,7 +9,7 @@ public partial class SysParameter
 
     public string Code { get; set; } = null!;
 
-    public string? Descp { get; set; }
+    public string? Value { get; set; }
 
     public string Status { get; set; } = null!;
 

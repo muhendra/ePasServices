@@ -312,5 +312,118 @@ namespace ePasServices.Controllers
                 limit
             });
         }
+
+        [HttpPost("check-complaint-banding")]
+        [Authorize]
+        public async Task<IActionResult> CheckEligibleBanding(
+            [FromBody] TrxFeedbackCheckEligibleRequest request
+        )
+        {
+            var username = User.FindFirst("username")?.Value;
+            if (string.IsNullOrEmpty(username))
+                return Unauthorized(new ApiResponse("Unauthorized", "Token invalid"));
+
+            var trxAudit = await _context.TrxAudits
+            .FirstOrDefaultAsync(x => x.Id == request.TrxAuditId);
+            if (trxAudit == null)
+            {
+                _logger.LogWarning("TrxAudit not found: {TrxAuditId}", request.TrxAuditId);
+                return NotFound(new ApiResponse("Error", "Audit tidak ditemukan"));
+            }
+
+            var parameter = await _context.SysParameters
+                .Where(p => p.Code == "BANDING_CLOSING_DATE_SPBU")
+                .Select(p => p.Value)
+                .FirstOrDefaultAsync();
+
+            if (string.IsNullOrEmpty(parameter))
+                return NotFound(new ApiResponse("Not Found", "Parameter tidak ditemukan"));
+
+            if (!int.TryParse(parameter, out int closingDate))
+                return BadRequest(new ApiResponse("Invalid Data", "Parameter value bukan integer yang valid"));
+
+            var bandingInfoText = $"Pengajuan banding hanya bisa dilakukan sebelum tanggal {closingDate} pukul 23:59 pada bulan berikutnya.";
+
+            var latestTrxAudit = await _context.TrxAudits
+                .Where(x => x.SpbuId == trxAudit.SpbuId
+                        && (x.Status == "UNDER_REVIEW" || x.Status == "VERIFIED"))
+                .OrderByDescending(x => x.AuditExecutionTime)
+                .FirstOrDefaultAsync();
+
+            if (latestTrxAudit == null || latestTrxAudit.Id != trxAudit.Id)
+            {
+                return Ok(new
+                {
+                    time = DateTime.Now,
+                    message = "Success",
+                    complaintEligible = false,
+                    bandingEligible = false,
+                    bandingInfo = bandingInfoText
+                });
+            }
+
+            DateOnly? baseDate = trxAudit.ApprovalDate.HasValue
+            ? DateOnly.FromDateTime(trxAudit.ApprovalDate.Value)
+            : trxAudit.AuditExecutionTime.HasValue
+                ? DateOnly.FromDateTime(trxAudit.AuditExecutionTime.Value)
+                : trxAudit.AuditScheduleDate;
+
+            if (baseDate == null)
+            {
+                return BadRequest(new ApiResponse("Invalid Data", "ApprovalDate, AuditExecutionTime, dan AuditScheduleDate semuanya null"));
+            }
+
+            // Parse timezone offset (e.g. "+7", "-3", "+07:00")
+            TimeSpan offset;
+            if (!TimeSpan.TryParse(request.Timezone, out offset))
+            {
+                // fallback: handle "+7" or "-5" style
+                if (request.Timezone.StartsWith("+") || request.Timezone.StartsWith("-"))
+                {
+                    if (int.TryParse(request.Timezone, out int hours))
+                    {
+                        offset = TimeSpan.FromHours(hours);
+                    }
+                    else
+                    {
+                        return BadRequest(new ApiResponse("Invalid Data", "Timezone tidak valid"));
+                    }
+                }
+                else
+                {
+                    return BadRequest(new ApiResponse("Invalid Data", "Timezone tidak valid"));
+                }
+            }
+
+            var nowInTz = DateTimeOffset.UtcNow.ToOffset(offset).Date;
+
+            // Calculate expected closing date = next month of baseDate with day = closingDate
+            var nextMonth = baseDate.Value.AddMonths(1);
+
+            var expectedDate = new DateTimeOffset(nextMonth.Year, nextMonth.Month, int.Parse(parameter), 0, 0, 0, offset);
+
+            // Compare only the date part
+            if (nowInTz.Date != expectedDate.Date)
+            {
+                return Ok(new
+                {
+                    time = nowInTz,
+                    message = "Success",
+                    complaintEligible = true,
+                    bandingEligible = false,
+                    bandingInfo = bandingInfoText
+                });
+            }
+
+            return Ok(new
+            {
+                time = DateTime.Now,
+                message = "Success",
+                complaintEligible = true,
+                bandingEligible = true,
+                bandingInfo = bandingInfoText
+            });
+        }
+
     }
 }
