@@ -11,6 +11,7 @@
         public string AuditorName { get; set; }
         public string GoodStatus { get; set; }
         public string ExcellentStatus { get; set; }
+        public string BoaStatus { get; set; }
         public string Score { get; set; }
         public string ReportFileGood { get; set; }
         public string ReportFileExcellent { get; set; }

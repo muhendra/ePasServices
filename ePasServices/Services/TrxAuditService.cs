@@ -141,7 +141,7 @@ public class TrxAuditService : ITrxAuditService
                 ta.status AS Status,
                 au.name AS AuditorName,
                 CASE 
-                    WHEN ta.good_status = 'CERTIFIED' OR ta.excellent_status = 'CERTIFIED' THEN 'PASSED'
+                    WHEN ta.good_status = 'CERTIFIED' OR ta.excellent_status = 'CERTIFIED' OR ta.boa_status = 'CERTIFIED' THEN 'PASSED'
                     ELSE 'FAILED'
                 END AS ResultStatus
             FROM trx_audit ta
@@ -215,6 +215,7 @@ public class TrxAuditService : ITrxAuditService
             au.name AS AuditorName,
             ta.good_status AS GoodStatus,
             ta.excellent_status AS ExcellentStatus,
+            ta.boa_status AS BoaStatus,
             ta.score AS Score,
             CASE 
                 WHEN ta.report_file_good IS NOT NULL 
