@@ -403,27 +403,28 @@ namespace ePasServices.Controllers
             var expectedDate = new DateTimeOffset(nextMonth.Year, nextMonth.Month, int.Parse(parameter), 0, 0, 0, offset);
 
             // Compare only the date part
-            if (nowInTz.Date != expectedDate.Date)
+            if (nowInTz.Date <= expectedDate.Date)
             {
                 return Ok(new
                 {
                     time = nowInTz,
                     message = "Success",
                     complaintEligible = true,
-                    bandingEligible = false,
+                    bandingEligible = true,
                     bandingInfo = bandingInfoText
                 });
             }
-
-            return Ok(new
-            {
-                time = DateTime.Now,
-                message = "Success",
-                complaintEligible = true,
-                bandingEligible = true,
-                bandingInfo = bandingInfoText
-            });
+            else
+            { 
+                return Ok(new
+                {
+                    time = DateTime.Now,
+                    message = "Success",
+                    complaintEligible = true,
+                    bandingEligible = false,
+                    bandingInfo = bandingInfoText
+                });    
+            }
         }
-
     }
 }
