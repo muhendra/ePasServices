@@ -342,7 +342,7 @@ namespace ePasServices.Controllers
             if (!int.TryParse(parameter, out int closingDate))
                 return BadRequest(new ApiResponse("Invalid Data", "Parameter value bukan integer yang valid"));
 
-            var bandingInfoText = $"Pengajuan banding hanya bisa dilakukan sebelum tanggal {closingDate} pukul 23:59 pada bulan berikutnya.";
+            var bandingInfoText = $"Pengajuan banding hanya bisa dilakukan maksimal tanggal {closingDate} pukul 23:59 pada bulan berikutnya.";
 
             var latestTrxAudit = await _context.TrxAudits
                 .Where(x => x.SpbuId == trxAudit.SpbuId
