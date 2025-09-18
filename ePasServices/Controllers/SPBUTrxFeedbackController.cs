@@ -362,15 +362,15 @@ namespace ePasServices.Controllers
                 });
             }
 
-            DateOnly? baseDate = trxAudit.ApprovalDate.HasValue
-            ? DateOnly.FromDateTime(trxAudit.ApprovalDate.Value)
-            : trxAudit.AuditExecutionTime.HasValue
-                ? DateOnly.FromDateTime(trxAudit.AuditExecutionTime.Value)
-                : trxAudit.AuditScheduleDate;
+            DateOnly? baseDate = trxAudit.AuditExecutionTime.HasValue
+            ? DateOnly.FromDateTime(trxAudit.AuditExecutionTime.Value)
+            : trxAudit.AuditScheduleDate.HasValue
+                ? trxAudit.AuditScheduleDate
+                : DateOnly.FromDateTime(trxAudit.ApprovalDate.Value);
 
             if (baseDate == null)
             {
-                return BadRequest(new ApiResponse("Invalid Data", "ApprovalDate, AuditExecutionTime, dan AuditScheduleDate semuanya null"));
+                return BadRequest(new ApiResponse("Invalid Data", "AuditExecutionTime, AuditScheduleDate, dan ApprovalDate semuanya null"));
             }
 
             // Parse timezone offset (e.g. "+7", "-3", "+07:00")
