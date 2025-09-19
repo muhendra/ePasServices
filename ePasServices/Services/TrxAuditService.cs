@@ -45,7 +45,7 @@ public class TrxAuditService : ITrxAuditService
                         SELECT 1
                         FROM trx_feedback tf
                         inner join trx_audit txa on txa.id = tf.trx_audit_id
-                        WHERE txa.spbu_id = ta.spbu_id and tf.feedback_type = 'BANDING' and tf.status not in ('APPROVE','REJECT','CLOSED')
+                        WHERE txa.spbu_id = ta.spbu_id and tf.feedback_type = 'BANDING' and tf.status not in ('DRAFT','APPROVE','REJECT','CLOSED')
                     ) THEN TRUE
                     ELSE FALSE
                 END AS HasProgressBanding
@@ -86,7 +86,7 @@ public class TrxAuditService : ITrxAuditService
                         SELECT 1
                         FROM trx_feedback tf
                         inner join trx_audit txa on txa.id = tf.trx_audit_id
-                        WHERE txa.spbu_id = ta.spbu_id and tf.feedback_type = 'BANDING' and tf.status not in ('APPROVE','REJECT','CLOSED')
+                        WHERE txa.spbu_id = ta.spbu_id and tf.feedback_type = 'BANDING' and tf.status not in ('DRAFT','APPROVE','REJECT','CLOSED')
                     ) THEN TRUE
                     ELSE FALSE
                 END AS HasProgressBanding
