@@ -45,7 +45,7 @@ public class TrxAuditService : ITrxAuditService
                         SELECT 1
                         FROM trx_feedback tf
                         inner join trx_audit txa on txa.id = tf.trx_audit_id
-                        WHERE txa.spbu_id = ta.spbu_id and tf.feedback_type = 'BANDING' and tf.status not in ('DRAFT','APPROVE','REJECT','CLOSED')
+                        WHERE txa.spbu_id = ta.spbu_id and tf.feedback_type = 'BANDING' and tf.status not in ('APPROVE','REJECT','CLOSED')
                     ) THEN TRUE
                     ELSE FALSE
                 END AS HasProgressBanding
@@ -86,14 +86,14 @@ public class TrxAuditService : ITrxAuditService
                         SELECT 1
                         FROM trx_feedback tf
                         inner join trx_audit txa on txa.id = tf.trx_audit_id
-                        WHERE txa.spbu_id = ta.spbu_id and tf.feedback_type = 'BANDING' and tf.status not in ('DRAFT','APPROVE','REJECT','CLOSED')
+                        WHERE txa.spbu_id = ta.spbu_id and tf.feedback_type = 'BANDING' and tf.status not in ('APPROVE','REJECT','CLOSED')
                     ) THEN TRUE
                     ELSE FALSE
                 END AS HasProgressBanding
             FROM trx_audit ta
             INNER JOIN spbu s ON s.id = ta.spbu_id
             INNER JOIN app_user au ON ta.app_user_id = au.id
-            WHERE ta.status NOT IN ('UNDER_REVIEW', 'VERIFIED', 'DELETED')
+            WHERE ta.status NOT IN ('DRAFT','UNDER_REVIEW', 'VERIFIED', 'DELETED')
             AND au.username = @username
             ORDER BY ta.audit_schedule_date ASC, s.spbu_no ASC
             LIMIT @limit OFFSET @offset;";
