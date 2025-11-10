@@ -1,8 +1,8 @@
 ﻿public class TrxAuditSubmitRequest
 {
     public string Id { get; set; }
-    public int AuditMediaTotal { get; set; }
-    public DateTime AuditExecutionDate { get; set; }
+    public int? AuditMediaTotal { get; set; }
+    public DateTime? AuditExecutionDate { get; set; }
     public string? AuditMomIntro { get; set; }
     public string? AuditMomFinal { get; set; }
     public string? AuditMomChecklist { get; set; }

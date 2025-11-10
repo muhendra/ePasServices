@@ -15,6 +15,8 @@ public partial class TrxAudit
 
     public string? AppUserId { get; set; }
 
+    public string? AppUserIdAuditor2 { get; set; }
+
     public string? MasterQuestionerIntroId { get; set; }
 
     public string? MasterQuestionerChecklistId { get; set; }
@@ -27,6 +29,8 @@ public partial class TrxAudit
 
     public DateTime? AuditExecutionTime { get; set; }
 
+    public DateTime? AuditExecutionTimeAuditor2 { get; set; }
+
     public int? AuditMediaUpload { get; set; }
 
     public int? AuditMediaTotal { get; set; }
@@ -34,6 +38,14 @@ public partial class TrxAudit
     public string? AuditMomIntro { get; set; }
 
     public string? AuditMomFinal { get; set; }
+
+    public string? FormTypeAuditor1 { get; set; }
+
+    public string? FormTypeAuditor2 { get; set; }
+
+    public string? FormStatusAuditor1 { get; set; }
+    
+    public string? FormStatusAuditor2 { get; set; }
 
     public string Status { get; set; } = null!;
 
