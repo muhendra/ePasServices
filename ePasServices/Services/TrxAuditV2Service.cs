@@ -64,8 +64,8 @@ public class TrxAuditV2Service : ITrxAuditV2Service
             LEFT JOIN app_user au2 ON ta.app_user_id_auditor2 = au2.id
             WHERE 
             CASE
-                WHEN au.username = 'auditor8' THEN ta.form_status_auditor1
-                WHEN au2.username = 'auditor8' THEN ta.form_status_auditor2
+                WHEN au.username = @username THEN ta.form_status_auditor1
+                WHEN au2.username = @username THEN ta.form_status_auditor2
                 ELSE ta.status
             END IN ('UNDER_REVIEW', 'VERIFIED')
             AND (@username IN (au.username, au2.username))
@@ -79,8 +79,8 @@ public class TrxAuditV2Service : ITrxAuditV2Service
             LEFT JOIN app_user au2 ON ta.app_user_id_auditor2 = au2.id
             WHERE 
             CASE
-                WHEN au.username = 'auditor8' THEN ta.form_status_auditor1
-                WHEN au2.username = 'auditor8' THEN ta.form_status_auditor2
+                WHEN au.username = @username THEN ta.form_status_auditor1
+                WHEN au2.username = @username THEN ta.form_status_auditor2
                 ELSE ta.status
             END IN ('UNDER_REVIEW', 'VERIFIED')
             AND (@username IN (au.username, au2.username));";
@@ -126,8 +126,8 @@ public class TrxAuditV2Service : ITrxAuditV2Service
             LEFT JOIN app_user au2 ON ta.app_user_id_auditor2 = au2.id
             WHERE 
             CASE
-                WHEN au.username = 'auditor8' THEN ta.form_status_auditor1
-                WHEN au2.username = 'auditor8' THEN ta.form_status_auditor2
+                WHEN au.username = @username THEN ta.form_status_auditor1
+                WHEN au2.username = @username THEN ta.form_status_auditor2
                 ELSE ta.status
             END NOT IN ('DRAFT','UNDER_REVIEW', 'VERIFIED', 'DELETED')
             AND (@username IN (au.username, au2.username))
@@ -141,8 +141,8 @@ public class TrxAuditV2Service : ITrxAuditV2Service
             LEFT JOIN app_user au2 ON ta.app_user_id_auditor2 = au2.id
             WHERE 
             CASE
-                WHEN au.username = 'auditor8' THEN ta.form_status_auditor1
-                WHEN au2.username = 'auditor8' THEN ta.form_status_auditor2
+                WHEN au.username = @username THEN ta.form_status_auditor1
+                WHEN au2.username = @username THEN ta.form_status_auditor2
                 ELSE ta.status
             END NOT IN ('DRAFT','UNDER_REVIEW', 'VERIFIED', 'DELETED')
             AND (@username IN (au.username, au2.username));";
@@ -173,8 +173,8 @@ public class TrxAuditV2Service : ITrxAuditV2Service
             LEFT JOIN app_user au2 ON ta.app_user_id_auditor2 = au2.id
             WHERE 
                 CASE
-                    WHEN au.username = 'auditor8' THEN ta.form_status_auditor1
-                    WHEN au2.username = 'auditor8' THEN ta.form_status_auditor2
+                    WHEN au.username = @username THEN ta.form_status_auditor1
+                    WHEN au2.username = @username THEN ta.form_status_auditor2
                     ELSE ta.status
                 END IN ('IN_PROGRESS_INPUT', 'IN_PROGRESS_SUBMIT')
                 AND (@username IN (au.username, au2.username));
