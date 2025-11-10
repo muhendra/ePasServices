@@ -68,6 +68,7 @@ public class TrxAuditV2Service : ITrxAuditV2Service
                 WHEN au2.username = @username THEN ta.form_status_auditor2
                 ELSE ta.status
             END IN ('UNDER_REVIEW', 'VERIFIED')
+            AND ta.status != 'DELETED'
             AND (@username IN (au.username, au2.username))
             ORDER BY ta.audit_schedule_date ASC
             LIMIT @limit OFFSET @offset;";
@@ -83,6 +84,7 @@ public class TrxAuditV2Service : ITrxAuditV2Service
                 WHEN au2.username = @username THEN ta.form_status_auditor2
                 ELSE ta.status
             END IN ('UNDER_REVIEW', 'VERIFIED')
+            AND ta.status != 'DELETED'
             AND (@username IN (au.username, au2.username));";
         }
         else
@@ -130,6 +132,7 @@ public class TrxAuditV2Service : ITrxAuditV2Service
                 WHEN au2.username = @username THEN ta.form_status_auditor2
                 ELSE ta.status
             END NOT IN ('DRAFT','UNDER_REVIEW', 'VERIFIED', 'DELETED')
+            AND ta.status != 'DELETED'
             AND (@username IN (au.username, au2.username))
             ORDER BY ta.audit_schedule_date ASC, s.spbu_no ASC
             LIMIT @limit OFFSET @offset;";
@@ -145,6 +148,7 @@ public class TrxAuditV2Service : ITrxAuditV2Service
                 WHEN au2.username = @username THEN ta.form_status_auditor2
                 ELSE ta.status
             END NOT IN ('DRAFT','UNDER_REVIEW', 'VERIFIED', 'DELETED')
+            AND ta.status != 'DELETED'
             AND (@username IN (au.username, au2.username));";
         }
 
