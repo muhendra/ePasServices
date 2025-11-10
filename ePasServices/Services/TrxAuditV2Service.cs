@@ -312,7 +312,7 @@ public class TrxAuditV2Service : ITrxAuditV2Service
                 audit_media_total = 0 ";
             }
 
-            if (formStatusAuditor2 != null)
+            if (formStatusAuditor2 == null || formStatusAuditor2 == "NOT_STARTED")
             {
                 updateSql += @",
                 status = 'NOT_STARTED' ";
@@ -343,7 +343,7 @@ public class TrxAuditV2Service : ITrxAuditV2Service
                 updated_by = @username,
                 updated_date = CURRENT_TIMESTAMP ";
 
-            if (formStatusAuditor1 != null)
+            if (formStatusAuditor1 != null && formStatusAuditor1 == "NOT_STARTED")
             {
                 updateSql += @",
                 status = 'NOT_STARTED' ";

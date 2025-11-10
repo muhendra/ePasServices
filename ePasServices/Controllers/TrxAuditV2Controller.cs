@@ -397,7 +397,7 @@ namespace ePasServices.Controllers
             if(audit.AppUserId == user.Id)
             {
                 audit.FormStatusAuditor1 = "UNDER_REVIEW";
-                if(audit.FormStatusAuditor2 == "UNDER_REVIEW")
+                if(audit.FormStatusAuditor2 == null || audit.FormStatusAuditor2 == "UNDER_REVIEW")
                 {
                     audit.Status = "UNDER_REVIEW";
                 }
