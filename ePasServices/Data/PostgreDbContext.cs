@@ -460,9 +460,15 @@ public partial class PostgreDbContext : DbContext
             entity.Property(e => e.AppUserId)
                 .HasMaxLength(50)
                 .HasColumnName("app_user_id");
+            entity.Property(e => e.AppUserIdAuditor2)
+                .HasMaxLength(50)
+                .HasColumnName("app_user_id_auditor2");
             entity.Property(e => e.AuditExecutionTime)
                 .HasColumnType("timestamp(3) without time zone")
                 .HasColumnName("audit_execution_time");
+            entity.Property(e => e.AuditExecutionTimeAuditor2)
+                .HasColumnType("timestamp(3) without time zone")
+                .HasColumnName("audit_execution_time_auditor2");
             entity.Property(e => e.AuditLevel)
                 .HasMaxLength(100)
                 .HasColumnName("audit_level");
@@ -496,6 +502,19 @@ public partial class PostgreDbContext : DbContext
             entity.Property(e => e.SpbuId)
                 .HasMaxLength(50)
                 .HasColumnName("spbu_id");
+             entity.Property(e => e.FormTypeAuditor1)
+                .HasMaxLength(50)
+                .HasDefaultValueSql("'FULL'::character varying")
+                .HasColumnName("form_type_auditor1");
+            entity.Property(e => e.FormTypeAuditor2)
+                .HasMaxLength(50)
+                .HasColumnName("form_type_auditor2");
+            entity.Property(e => e.FormStatusAuditor1)
+                .HasMaxLength(100)
+                .HasColumnName("form_status_auditor1");
+            entity.Property(e => e.FormStatusAuditor2)
+                .HasMaxLength(100)
+                .HasColumnName("form_status_auditor2");
             entity.Property(e => e.Status)
                 .HasMaxLength(100)
                 .HasColumnName("status");
