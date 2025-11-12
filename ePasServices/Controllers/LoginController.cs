@@ -34,7 +34,7 @@ public class LoginController : ControllerBase
 
         if (headerKey != hash)
         {
-            _logger.LogDebug("Hash : " + hash);
+            _logger.LogWarning("Hash : " + hash);
             return Unauthorized(new ApiResponse("Unauthorized", "Unauthorized [002]"));
         }
 
