@@ -6,11 +6,13 @@ using System.Text;
 [Route("v1")]
 public class LoginController : ControllerBase
 {
+    private readonly ILogger<LoginController> _logger;
     private readonly IConfiguration _config;
     private readonly IAppUserService _userService;
 
-    public LoginController(IConfiguration config, IAppUserService userService)
+    public LoginController(ILogger<LoginController> logger, IConfiguration config, IAppUserService userService)
     {
+        _logger = logger;
         _config = config;
         _userService = userService;
     }
@@ -31,7 +33,10 @@ public class LoginController : ControllerBase
         var hash = Convert.ToHexString(pbkdf2.GetBytes(32)).ToLower();
 
         if (headerKey != hash)
+        {
+            _logger.LogDebug("Hash : " + hash);
             return Unauthorized(new ApiResponse("Unauthorized", "Unauthorized [002]"));
+        }
 
         var errors = new Dictionary<string, string>();
 
