@@ -10,6 +10,7 @@ namespace ePasServices.Services.Interfaces
         Task<(bool Success, string Message)> CancelAuditAsync(string username, string auditId);
 
         Task<int> CountInProgressAsync(string username);
-        
+
+        Task SyncStatusAuditor1Async(string username);
     }
 }
