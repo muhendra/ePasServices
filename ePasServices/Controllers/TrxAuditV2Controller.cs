@@ -36,6 +36,8 @@ namespace ePasServices.Controllers
             if (string.IsNullOrEmpty(username))
                 return Unauthorized(new ApiResponse("Unauthorized", "Token invalid"));
 
+            await _auditService.SyncStatusAuditor1Async(username);
+
             var (data, total) = await _auditService.GetTrxAuditListAsync(page, limit, history, username);
 
             if (data == null || !data.Any())

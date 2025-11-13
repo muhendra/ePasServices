@@ -367,4 +367,21 @@ public class TrxAuditV2Service : ITrxAuditV2Service
             
         }
     }
+
+    public async Task SyncStatusAuditor1Async(string username)
+    {
+        var updateSql = @"
+        UPDATE trx_audit ta
+        SET form_status_auditor1 = ta.status
+        FROM app_user au
+        WHERE au.id = ta.app_user_id
+        AND au.username = @username
+        AND ta.status <> ta.form_status_auditor1
+        AND ta.form_status_auditor2 IS NULL";
+
+        var affected = await _conn.ExecuteAsync(updateSql, new
+        {
+            username
+        });
+    }
 }

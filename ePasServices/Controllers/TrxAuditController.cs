@@ -17,11 +17,13 @@ namespace ePasServices.Controllers
     {
         private readonly ILogger<TrxAuditController> _logger;
         private readonly ITrxAuditService _auditService;
+        private readonly ITrxAuditV2Service _auditServiceV2;
         private readonly PostgreDbContext _context;
         private readonly IConfiguration _config;
 
-        public TrxAuditController(ITrxAuditService auditService, PostgreDbContext context, IConfiguration config, ILogger<TrxAuditController> logger)
+        public TrxAuditController(ITrxAuditService auditService, ITrxAuditV2Service auditServiceV2, PostgreDbContext context, IConfiguration config, ILogger<TrxAuditController> logger)
         {
+            _auditServiceV2 = auditServiceV2;
             _auditService = auditService;
             _context = context;
             _config = config;
@@ -35,6 +37,8 @@ namespace ePasServices.Controllers
             var username = User.FindFirst("username")?.Value;
             if (string.IsNullOrEmpty(username))
                 return Unauthorized(new ApiResponse("Unauthorized", "Token invalid"));
+
+            await _auditServiceV2.SyncStatusAuditor1Async(username);
 
             var (data, total) = await _auditService.GetTrxAuditListAsync(page, limit, history, username);
 
