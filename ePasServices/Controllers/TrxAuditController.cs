@@ -153,6 +153,7 @@ namespace ePasServices.Controllers
             _logger.LogInformation("Updating audit basic info for AuditId: {AuditId}", audit.Id);
             audit.AuditMediaUpload = 0;
             audit.AuditMediaTotal = request.AuditMediaTotal;
+            audit.FormStatusAuditor1 = "IN_PROGRESS_SUBMIT";
             audit.Status = "IN_PROGRESS_SUBMIT";
             audit.UpdatedDate = DateTime.Now;
             audit.UpdatedBy = username;
@@ -322,6 +323,7 @@ namespace ePasServices.Controllers
             audit.AuditMediaUpload = (audit.AuditMediaUpload ?? 0) + 1;
             if (audit.AuditMediaUpload == audit.AuditMediaTotal)
             {
+                audit.FormStatusAuditor1 = "UNDER_REVIEW";
                 audit.Status = "UNDER_REVIEW";
             }
             audit.UpdatedBy = username;
