@@ -303,6 +303,7 @@ public class TrxAuditService : ITrxAuditService
         var updateSql = @"
         UPDATE trx_audit 
         SET status = @newStatus,
+            form_status_auditor1 = @newStatus,
             updated_by = @username,
             updated_date = CURRENT_TIMESTAMP,
             audit_execution_time = CURRENT_TIMESTAMP,
@@ -356,6 +357,7 @@ public class TrxAuditService : ITrxAuditService
             audit_mom_intro = '',
             audit_mom_final = '',
             status = 'NOT_STARTED',
+            form_status_auditor1 = 'NOT_STARTED',
             updated_by = @username,
             updated_date = CURRENT_TIMESTAMP
         WHERE id = @auditId";
