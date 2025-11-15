@@ -368,7 +368,7 @@ public class TrxAuditV2Service : ITrxAuditV2Service
         }
     }
 
-    public async Task SyncStatusAuditor1Async(string username)
+    public async Task<int> SyncStatusAuditor1Async(string username)
     {
         var updateSql = @"
         UPDATE trx_audit ta
@@ -379,7 +379,7 @@ public class TrxAuditV2Service : ITrxAuditV2Service
         AND ta.status <> ta.form_status_auditor1
         AND ta.form_status_auditor2 IS NULL";
 
-        var affected = await _conn.ExecuteAsync(updateSql, new
+        return await _conn.ExecuteAsync(updateSql, new
         {
             username
         });

@@ -11,6 +11,6 @@ namespace ePasServices.Services.Interfaces
 
         Task<int> CountInProgressAsync(string username);
 
-        Task SyncStatusAuditor1Async(string username);
+        Task<int> SyncStatusAuditor1Async(string username);
     }
 }
